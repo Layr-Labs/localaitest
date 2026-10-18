@@ -54,21 +54,21 @@ export function Footer() {
           </div>
         </section>
 
-        <div className="mt-8 flex flex-col gap-2 text-sm sm:flex-row sm:justify-between">
-          <p>
-            Made with ❤️ by <ExternalLink href={CREATOR.url}>{CREATOR.name}</ExternalLink>
-          </p>
-          <p>
-            Inspired by work of{" "}
-            <ExternalLink href={INSPIRED_BY.people[0].url}>{INSPIRED_BY.people[0].name}</ExternalLink> and{" "}
-            <ExternalLink href={INSPIRED_BY.people[1].url}>{INSPIRED_BY.people[1].name}</ExternalLink> on{" "}
-            <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink>
-          </p>
-        </div>
+        <p className="mt-8 text-sm">
+          Made with ❤️ by <ExternalLink href={CREATOR.url}>{CREATOR.name}</ExternalLink>
+        </p>
 
         <p className="mt-10 font-mono text-xs text-zinc-400">
           <span className="text-accent">$</span> No cloud was used to calculate your score. It&apos;s 100 minus a
           number.
+        </p>
+
+        <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+          Inspired by the work of{" "}
+          <ExternalLink href={INSPIRED_BY.people[0].url}>{INSPIRED_BY.people[0].name}</ExternalLink> and{" "}
+          <ExternalLink href={INSPIRED_BY.people[1].url}>{INSPIRED_BY.people[1].name}</ExternalLink> on{" "}
+          <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink>, and the original{" "}
+          <ExternalLink href={INSPIRED_BY.original.url}>{INSPIRED_BY.original.name}</ExternalLink>.
         </p>
       </div>
     </footer>

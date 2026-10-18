@@ -98,4 +98,12 @@ Set `NEXT_PUBLIC_SITE_URL` to override the share-link domain (defaults to `https
 
 Made by [Pratik](https://x.com/pratikg).
 
-Inspired by the work of [Tyler](https://x.com/tyler_fong_) and [Sarah](https://x.com/MilksandMatcha) on [sfpurity.com](https://sfpurity.com).
+Inspired by the work of [Tyler](https://x.com/tyler_fong_) and [Sarah](https://x.com/MilksandMatcha) on [sfpurity.com](https://sfpurity.com), and the original [Rice Purity Test](https://en.wikipedia.org/wiki/Rice_Purity_Test).
+
+## License
+
+The code is released under the [MIT License](LICENSE).
+
+The name "Local AI Purity Test", the localaitest.com domain, and the Local AI Builders branding are not covered by the license. If you fork this, please give it your own name.
+
+The bundled fonts are licensed separately under the SIL Open Font License 1.1: [Inter](assets/fonts/OFL-Inter.txt) and [Geist Mono](assets/fonts/OFL-GeistMono.txt).

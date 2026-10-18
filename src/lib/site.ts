@@ -11,6 +11,7 @@ export const INSPIRED_BY = {
     { name: "Sarah", url: "https://x.com/MilksandMatcha" },
   ],
   site: { name: "sfpurity.com", url: "https://sfpurity.com/" },
+  original: { name: "Rice Purity Test", url: "https://en.wikipedia.org/wiki/Rice_Purity_Test" },
 };
 
 export function resultUrl(code: string): string {
