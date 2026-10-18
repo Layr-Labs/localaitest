@@ -106,7 +106,7 @@ export const ITEMS: Item[] = [
   { id: 77, text: 'Watched a "run DeepSeek locally in 5 minutes" YouTube video', joke: "It took 5 hours." },
   { id: 78, text: "Built your own vibe eval" },
   { id: 79, text: "Stopped trusting benchmarks after a model you loved scored badly" },
-  { id: 80, text: "Tested a model on OpenRouter before downloading it" },
+  { id: 80, text: "Plugged your idle Mac into Darkbloom while you slept", joke: "Your Mac has a side hustle now." },
   { id: 81, text: "Explained quantization to a non-tech friend at dinner", joke: "They did not ask for a second dinner." },
   { id: 82, text: 'Said "privacy" was the reason when it was really because it\'s cool' },
   { id: 83, text: "Still pay for ChatGPT, Claude, or Gemini", joke: "For comparison. Obviously." },

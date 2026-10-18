@@ -48,7 +48,7 @@ Enter a Hugging Face or GitHub username and the test ticks the items it can prov
 - A VRAM bar that fills as you tick items and overflows into "offloading to CPU… 0.4 tok/s"
 - A GPU fan and temperature that climb with your answers
 - An "Ask an AI Assistant" button that runs out of CUDA memory
-- Hover jokes on 33 items, including a deliberately bad pelican on a bicycle
+- Hover jokes on 34 items, including a deliberately bad pelican on a bicycle
 - A score reveal that streams like a local model, at a fake tokens-per-second rate
 - A hidden phrase: type `gguf when` anywhere on the page
 - A 404 page that tells you to `ollama pull` it
