@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* San Francisco on Apple devices, Helvetica Neue / Helvetica elsewhere. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --color-accent: #16a34a;
+  --color-accent-dark: #15803d;
+  --color-term: #0b0f0c;
+  --color-term-green: #4ade80;
+}
+
+body {
+  background: #ffffff;
+  color: #18181b;
+}
+
+/* Fan in the status bar. Speed is set inline from how many items are checked. */
+@keyframes fan-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fan {
+  animation: fan-spin linear infinite;
+}
+
+/* Types text out one character at a time; width is set inline in ch units. */
+@keyframes type-out {
+  from {
+    width: 0;
+  }
+}
+.type-slow {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.cursor::after {
+  content: "▋";
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes toast-in {
+  from {
+    transform: translate(-50%, 16px);
+    opacity: 0;
+  }
+}
+.toast {
+  animation: toast-in 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan,
+  .type-slow,
+  .cursor::after,
+  .toast {
+    animation: none !important;
+  }
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
