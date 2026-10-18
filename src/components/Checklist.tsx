@@ -5,10 +5,19 @@ import { useRouter } from "next/navigation";
 import { ITEMS, type DetectRule } from "@/data/items";
 import { hardwareMatches, totalMemory, type Rig } from "@/lib/rig";
 import { formatCode, rigClassFor, TOTAL_ITEMS } from "@/lib/score";
-import { clearState, EMPTY_STATE, loadState, saveLastResult, saveState, type DetectSource, type SavedState } from "@/lib/storage";
+import {
+  clearState,
+  EMPTY_STATE,
+  loadState,
+  saveLastResult,
+  saveState,
+  type DetectSource,
+  type SavedState,
+} from "@/lib/storage";
 import { AskAssistant } from "./AskAssistant";
 import { AutofillPanel } from "./AutofillPanel";
 import { Joke } from "./Joke";
+import { ScoreLoading } from "./ScoreLoading";
 import { StatusBar } from "./StatusBar";
 
 const SECRET = "gguf when";
@@ -19,6 +28,19 @@ export function Checklist() {
   const stateRef = useRef(state);
   const [loaded, setLoaded] = useState(false);
   const [toast, setToast] = useState(false);
+  // "busy" flips on click; the overlay only appears if the result page is slow to arrive.
+  const [calculating, setCalculating] = useState<"idle" | "busy" | "overlay">("idle");
+  const overlayTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  // Next.js keeps this page alive (hidden) after navigating to the result, and runs effect
+  // cleanups when it hides it. Resetting here means Back never returns to a stuck loader.
+  useEffect(
+    () => () => {
+      clearTimeout(overlayTimer.current);
+      setCalculating("idle");
+    },
+    [],
+  );
 
   function update(fn: (s: SavedState) => SavedState) {
     const next = fn(stateRef.current);
@@ -45,7 +67,8 @@ export function Checklist() {
     let hide: ReturnType<typeof setTimeout> | undefined;
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT")) return;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT"))
+        return;
       if (e.key.length !== 1) return;
       typed = (typed + e.key.toLowerCase()).slice(-SECRET.length);
       if (typed === SECRET) {
@@ -95,10 +118,22 @@ export function Checklist() {
     setState(EMPTY_STATE);
   }
 
-  function calculate() {
+  function resultCode() {
     const score = TOTAL_ITEMS - state.checked.length;
-    const code = formatCode(score, rigGb !== null ? rigClassFor(rigGb) : null);
+    return formatCode(score, rigGb !== null ? rigClassFor(rigGb) : null);
+  }
+
+  /** Starts loading the result page on hover, focus, or touch, so the click itself feels instant. */
+  function prefetchResult() {
+    router.prefetch(`/r/${resultCode()}`);
+  }
+
+  function calculate() {
+    if (calculating !== "idle") return;
+    const code = resultCode();
     saveLastResult(code);
+    setCalculating("busy");
+    overlayTimer.current = setTimeout(() => setCalculating((c) => (c === "busy" ? "overlay" : c)), 300);
     router.push(`/r/${code}`);
   }
 
@@ -106,7 +141,9 @@ export function Checklist() {
     <>
       <StatusBar checked={state.checked.length} rig={state.rig} />
       <main className="mx-auto w-full max-w-[720px] px-4 pt-8">
-        <h1 className="text-4xl font-bold tracking-tight text-accent sm:text-5xl text-balance">The Local AI Purity Test</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-accent sm:text-5xl text-balance">
+          The Local AI Purity Test
+        </h1>
         <p className="mt-3 text-zinc-700">
           The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
         </p>
@@ -158,9 +195,21 @@ export function Checklist() {
           <button
             type="button"
             onClick={calculate}
-            className="rounded-md bg-accent px-6 py-3 text-lg font-semibold text-white shadow hover:bg-accent-dark"
+            onPointerEnter={prefetchResult}
+            onFocus={prefetchResult}
+            onTouchStart={prefetchResult}
+            aria-busy={calculating !== "idle"}
+            className={`inline-flex items-center gap-2.5 rounded-md px-6 py-3 text-lg font-semibold text-white shadow transition-transform duration-100 active:scale-95 ${
+              calculating === "idle" ? "bg-accent hover:bg-accent-dark" : "cursor-progress bg-accent-dark"
+            }`}
           >
-            Calculate My Score
+            {calculating !== "idle" && (
+              <span
+                className="spinner size-4 rounded-full border-2 border-white/35 border-t-white"
+                aria-hidden="true"
+              />
+            )}
+            {calculating === "idle" ? "Calculate My Score" : "Quantizing…"}
           </button>
           <span className="font-mono text-sm text-zinc-600">{state.checked.length} checked</span>
           <button type="button" onClick={reset} className="ml-auto text-sm text-zinc-500 underline hover:text-zinc-800">
@@ -170,6 +219,8 @@ export function Checklist() {
       </main>
 
       <AskAssistant rigGb={rigGb} />
+
+      {calculating === "overlay" && <ScoreLoading />}
 
       {toast && (
         <div

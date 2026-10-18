@@ -59,11 +59,30 @@ body {
   animation: toast-in 200ms ease-out;
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fade-in 150ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fan,
   .type-slow,
   .cursor::after,
-  .toast {
+  .toast,
+  .fade-in {
     animation: none !important;
   }
 }

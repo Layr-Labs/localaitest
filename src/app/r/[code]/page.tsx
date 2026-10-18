@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { ResultView } from "@/components/ResultView";
+import { ScoreLoading } from "@/components/ScoreLoading";
 import { allCodes, parseCode, RIG_CLASSES, roastFor, tierFor } from "@/lib/score";
 import { SITE_NAME } from "@/lib/site";
 
@@ -32,20 +33,10 @@ async function Result({ params }: { params: PageProps<"/r/[code]">["params"] }) 
   return <ResultView code={code} score={result.score} rig={result.rig} />;
 }
 
-function Loading() {
-  return (
-    <main className="mx-auto w-full max-w-[720px] px-4 pt-12">
-      <div className="mt-8 rounded-xl bg-term p-8 font-mono text-sm text-term-green">
-        <span className="cursor">llama_model_load: loading your score</span>
-      </div>
-    </main>
-  );
-}
-
 export default function ResultPage({ params }: PageProps<"/r/[code]">) {
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<ScoreLoading />}>
         <Result params={params} />
       </Suspense>
       <Footer />
