@@ -1,20 +1,17 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Colors sampled from the Local AI Builders banner.
-const BLUE = "#2d3be6";
-const CREAM = "#f1efe0";
-const YELLOW = "#f4b51c";
+// Same green as the site's accent color.
+const GREEN = "#16a34a";
+const TEXT = "#ffffff";
 
 export async function brandIconFonts() {
   const bold = await readFile(join(process.cwd(), "assets/fonts/Inter-Bold.ttf"));
   return [{ name: "Inter", data: bold, weight: 700 as const, style: "normal" as const }];
 }
 
-/** "Local AI / Builders." with the yellow square, sized to fill a square icon. */
+/** "Local / AI" stacked, so the text stays large enough to read at tab size. */
 export function BrandIcon({ size }: { size: number }) {
-  const fontSize = size * 0.205;
-  const square = fontSize * 0.26;
   return (
     <div
       style={{
@@ -24,29 +21,17 @@ export function BrandIcon({ size }: { size: number }) {
         flexDirection: "column",
         justifyContent: "center",
         paddingLeft: size * 0.09,
-        background: BLUE,
-        color: CREAM,
+        background: GREEN,
+        color: TEXT,
         fontFamily: "Inter",
         fontWeight: 700,
-        fontSize,
-        lineHeight: 1,
-        letterSpacing: "-0.045em",
+        fontSize: size * 0.34,
+        lineHeight: 0.95,
+        letterSpacing: "-0.05em",
       }}
     >
-      <span>Local AI</span>
-      <div style={{ display: "flex", alignItems: "flex-end" }}>
-        <span>Builders</span>
-        <span
-          style={{
-            width: square,
-            height: square,
-            marginLeft: fontSize * 0.06,
-            marginBottom: fontSize * 0.12,
-            background: YELLOW,
-            borderRadius: square * 0.12,
-          }}
-        />
-      </div>
+      <span>Local</span>
+      <span>AI</span>
     </div>
   );
 }
