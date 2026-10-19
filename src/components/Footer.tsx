@@ -48,8 +48,8 @@ export function Footer() {
               There are no accounts, no analytics and no tracking.
             </p>
             <p>
-              Autofill is optional. Your browser asks Hugging Face and GitHub directly, so we never see your username.
-              Share links carry only your score and rig class.
+              Autofill is optional. Connecting GitHub or Hugging Face only reads your public profile, and we don&apos;t store
+              anything. Share links carry only your score and rig class.
             </p>
           </div>
         </section>

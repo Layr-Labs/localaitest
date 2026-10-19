@@ -111,6 +111,10 @@ export function Checklist() {
     if (rig) applyRules(hardwareMatches(rig.devices), rig.source === "hf" ? "Hugging Face" : "your rig");
   }
 
+  function markConnected(provider: "github" | "huggingface", username: string) {
+    update((s) => ({ ...s, connected: { ...s.connected, [provider]: username } }));
+  }
+
   function reset() {
     if (state.checked.length > 0 && !window.confirm("Clear all your answers and your rig?")) return;
     clearState();
@@ -151,7 +155,13 @@ export function Checklist() {
           Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
         </p>
 
-        <AutofillPanel rig={state.rig} onDetected={applyRules} onRigChange={changeRig} />
+        <AutofillPanel
+          rig={state.rig}
+          connected={state.connected}
+          onDetected={applyRules}
+          onRigChange={changeRig}
+          onConnected={markConnected}
+        />
 
         <ul className="mt-8">
           {ITEMS.map((item) => {

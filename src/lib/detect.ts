@@ -66,9 +66,15 @@ function githubError(res: Response): string | null {
   return null;
 }
 
-async function githubSearchCount(query: string): Promise<number | string> {
+function githubHeaders(token?: string): HeadersInit {
+  return token
+    ? { Accept: "application/vnd.github+json", Authorization: `Bearer ${token}` }
+    : { Accept: "application/vnd.github+json" };
+}
+
+async function githubSearchCount(query: string, token?: string): Promise<number | string> {
   const res = await fetch(`https://api.github.com/search/issues?per_page=1&q=${encodeURIComponent(query)}`, {
-    headers: { Accept: "application/vnd.github+json" },
+    headers: githubHeaders(token),
   });
   const error = githubError(res);
   if (error) return error === "not-found" ? 0 : error;
@@ -76,12 +82,25 @@ async function githubSearchCount(query: string): Promise<number | string> {
   return Number(body?.total_count ?? 0);
 }
 
-export async function lookupGitHub(rawUser: string): Promise<LookupResult> {
+/** Looks up the account behind a "Connect GitHub" token. The token only has public read access. */
+export async function lookupGitHubConnected(token: string): Promise<LookupResult & { username?: string }> {
+  try {
+    const res = await fetch("https://api.github.com/user", { headers: githubHeaders(token) });
+    if (!res.ok) return { rules: [], devices: [], error: "GitHub didn't finish connecting. Try again." };
+    const { login } = await res.json();
+    if (typeof login !== "string") return { rules: [], devices: [], error: "Couldn't read your GitHub profile." };
+    return { ...(await lookupGitHub(login, token)), username: login };
+  } catch {
+    return { rules: [], devices: [], error: "Couldn't reach GitHub. Check your connection." };
+  }
+}
+
+export async function lookupGitHub(rawUser: string, token?: string): Promise<LookupResult> {
   const user = cleanUsername(rawUser);
   if (!USERNAME.test(user)) return { rules: [], devices: [], error: "That doesn't look like a GitHub username." };
   try {
     const userRes = await fetch(`https://api.github.com/users/${encodeURIComponent(user)}`, {
-      headers: { Accept: "application/vnd.github+json" },
+      headers: githubHeaders(token),
     });
     const userError = githubError(userRes);
     if (userError === "not-found") return { rules: [], devices: [], error: `No GitHub user called "${user}".` };
@@ -92,7 +111,7 @@ export async function lookupGitHub(rawUser: string): Promise<LookupResult> {
 
     for (let page = 1; page <= 3; page++) {
       const res = await fetch(`https://api.github.com/users/${encodeURIComponent(user)}/starred?per_page=100&page=${page}`, {
-        headers: { Accept: "application/vnd.github+json" },
+        headers: githubHeaders(token),
       });
       const starredError = githubError(res);
       if (starredError) {
@@ -108,11 +127,11 @@ export async function lookupGitHub(rawUser: string): Promise<LookupResult> {
     }
 
     const repoQuery = TRACKED_REPOS.map((r) => `repo:${r}`).join(" ");
-    const issues = await githubSearchCount(`author:${user} type:issue ${repoQuery}`);
+    const issues = await githubSearchCount(`author:${user} type:issue ${repoQuery}`, token);
     if (typeof issues === "string") error = issues;
     else if (issues > 0) rules.push("gh-issue");
 
-    const prs = await githubSearchCount(`author:${user} type:pr is:merged ${repoQuery}`);
+    const prs = await githubSearchCount(`author:${user} type:pr is:merged ${repoQuery}`, token);
     if (typeof prs === "string") error = prs;
     else if (prs > 0) rules.push("gh-merged-pr");
 

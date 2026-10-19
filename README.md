@@ -41,7 +41,7 @@ Optionally add your hardware, either read from the hardware you list on your Hug
 
 ### Autofill
 
-Enter a Hugging Face or GitHub username and the test ticks the items it can prove from public data, each tagged "detected via…" so you can untick it:
+Connect GitHub or Hugging Face and the test ticks the items it can prove from your public profile, each tagged "detected via…" so you can untick it:
 
 - **Hugging Face:** your listed hardware (two 3090s, a 64GB or 512GB Mac, a DGX Spark or Strix Halo, two or more Sparks, four or more Sparks), uploaded models, GGUFs, LoRAs, merges, and whether your downloads beat your followers
 - **GitHub:** starring llama.cpp, and opening issues or getting PRs merged in llama.cpp, Ollama, or vLLM
@@ -58,7 +58,7 @@ Enter a Hugging Face or GitHub username and the test ticks the items it can prov
 ## Privacy
 
 - Your answers never leave your browser. They're saved on your device only (localStorage), and Reset deletes them.
-- Autofill is optional. Your browser asks Hugging Face and GitHub directly, so the server never sees a username.
+- Autofill is optional and reads only your public profile. Hugging Face login runs entirely in the browser. GitHub login passes through one server route that swaps the login code for a token and hands it to the browser; nothing is stored, and the token is revoked once autofill finishes.
 - Share links carry only the score and rig class.
 - No accounts, no analytics, and no tracking.
 
@@ -77,6 +77,7 @@ Enter a Hugging Face or GitHub username and the test ticks the items it can prov
 | `src/lib/score.ts` | Ranks, quant tiers, roasts, rig badges, result codes, and share text |
 | `src/lib/rig.ts` | Hugging Face hardware parsing, the device picker list, and hardware rules |
 | `src/lib/detect.ts` | Browser-side Hugging Face and GitHub lookups |
+| `src/lib/oauth.ts`, `src/app/api/auth/github/` | The Connect GitHub and Connect Hugging Face logins |
 | `src/lib/og.tsx` | The rank card and homepage card layouts |
 | `src/lib/laurel.ts` | The laurel wreath, drawn as SVG |
 | `src/components/` | The checklist, results page, status bar, autofill panel, and popups |
@@ -96,6 +97,14 @@ npm run build   # production build; prerenders all 505 result pages
 ```
 
 Set `NEXT_PUBLIC_SITE_URL` to override the share-link domain (defaults to `https://localaitest.com`).
+
+Connect buttons need these environment variables (in `.env.local` locally, and in Vercel for production):
+
+| Variable | From |
+|---|---|
+| `GITHUB_CLIENT_ID` | A GitHub OAuth app whose callback is `<site>/api/auth/github/callback` |
+| `GITHUB_CLIENT_SECRET` | The same GitHub OAuth app |
+| `NEXT_PUBLIC_HF_CLIENT_ID` | A Hugging Face OAuth app with no secret, scopes `openid profile`, redirect `<site>/` |
 
 ## Credits
 

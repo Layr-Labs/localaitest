@@ -6,12 +6,14 @@ export type SavedState = {
   checked: number[];
   detected: Record<number, DetectSource>;
   rig: Rig | null;
+  /** Usernames of connected accounts, shown in the autofill panel. Kept on this device only. */
+  connected: { github?: string; huggingface?: string };
 };
 
 const STATE_KEY = "localaitest:v1";
 const LAST_RESULT_KEY = "localaitest:last";
 
-export const EMPTY_STATE: SavedState = { checked: [], detected: {}, rig: null };
+export const EMPTY_STATE: SavedState = { checked: [], detected: {}, rig: null, connected: {} };
 
 export function loadState(): SavedState {
   try {
@@ -22,6 +24,7 @@ export function loadState(): SavedState {
       checked: Array.isArray(parsed.checked) ? parsed.checked.filter(Number.isInteger) : [],
       detected: parsed.detected && typeof parsed.detected === "object" ? parsed.detected : {},
       rig: parsed.rig && Array.isArray(parsed.rig.devices) ? parsed.rig : null,
+      connected: parsed.connected && typeof parsed.connected === "object" ? parsed.connected : {},
     };
   } catch {
     return EMPTY_STATE;
