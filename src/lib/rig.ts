@@ -62,6 +62,7 @@ const apple = (name: string, memOptions: number[]): DeviceOption => ({
  * Apple memory options are the configurations each chip shipped with.
  */
 export const DEVICE_OPTIONS: DeviceOption[] = [
+  apple("M5 Ultra", [96, 256, 512]),
   apple("M5 Max", [36, 48, 64, 128]),
   apple("M5 Pro", [24, 48, 64]),
   apple("M5", [16, 24, 32]),

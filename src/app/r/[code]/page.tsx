@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { ResultView } from "@/components/ResultView";
 import { ScoreLoading } from "@/components/ScoreLoading";
-import { allCodes, parseCode, RIG_CLASSES, roastFor, tierFor } from "@/lib/score";
+import { allCodes, iAm, parseCode, roastFor, tierFor } from "@/lib/score";
 import { SITE_NAME } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -14,9 +14,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/r/[code]">): Promise<Metadata> {
   const result = parseCode((await params).code);
   if (!result) return { title: `Model not found · ${SITE_NAME}` };
-  const tier = tierFor(result.score).name;
-  const rig = result.rig ? ` on a ${RIG_CLASSES[result.rig].label} rig` : "";
-  const title = `${result.score}/100 · running at ${tier}${rig}`;
+  const tier = tierFor(result.score);
+  const title = `${iAm(tier)} · ${result.score}/100`;
   const description = `${roastFor(result.score)} Take ${SITE_NAME}.`;
   return {
     title: `${title} · ${SITE_NAME}`,

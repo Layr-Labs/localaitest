@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ITEMS, type DetectRule } from "@/data/items";
 import { hardwareMatches, totalMemory, type Rig } from "@/lib/rig";
-import { formatCode, rigClassFor, TOTAL_ITEMS } from "@/lib/score";
+import { formatCode, rigClassFor } from "@/lib/score";
 import {
   clearState,
   EMPTY_STATE,
@@ -119,7 +119,7 @@ export function Checklist() {
   }
 
   function resultCode() {
-    const score = TOTAL_ITEMS - state.checked.length;
+    const score = state.checked.length;
     return formatCode(score, rigGb !== null ? rigClassFor(rigGb) : null);
   }
 

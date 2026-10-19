@@ -59,8 +59,7 @@ export function Footer() {
         </p>
 
         <p className="mt-10 font-mono text-xs text-zinc-400">
-          <span className="text-accent">$</span> No cloud was used to calculate your score. It&apos;s 100 minus a
-          number.
+          <span className="text-accent">$</span> No cloud was used to calculate your score. It&apos;s a count of boxes.
         </p>
 
         <p className="mt-3 text-xs leading-relaxed text-zinc-500">

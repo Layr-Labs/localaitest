@@ -2,35 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { drawCard } from "@/lib/card";
-import { RIG_CLASSES, roastFor, shareText, tierFor, TIERS, type RigClass } from "@/lib/score";
-import { resultUrl, SITE_DOMAIN } from "@/lib/site";
+import { RIG_CLASSES, roastFor, shareText, tierFor, TOTAL_ITEMS, youAre, type RigClass } from "@/lib/score";
+import { resultUrl } from "@/lib/site";
 import { loadLastResult } from "@/lib/storage";
+import { TierLadder } from "./TierLadder";
 
 type Props = { code: string; score: number; rig: RigClass | null };
 
 const buttonBase = "inline-flex items-center justify-center rounded-md px-4 py-2.5 font-medium";
 
-function cleanHandle(input: string): string {
-  const handle = input.trim().replace(/^@/, "").replace(/[^A-Za-z0-9_]/g, "").slice(0, 15);
-  return handle ? `@${handle}` : "";
-}
-
 export function ResultView({ code, score, rig }: Props) {
   const tier = tierFor(score);
   const roast = roastFor(score);
   const words = roast.split(" ");
-  const finalTierIndex = TIERS.indexOf(tier);
   // Fake but stable generation speed, so the same score always "ran" at the same speed.
   const tokPerSec = (11 + ((score * 37) % 70) / 10).toFixed(1);
+  // The same image the link preview uses, so the page, the download, and the post always match.
+  const cardSrc = `/r/${code}/opengraph-image`;
 
   const [mine, setMine] = useState<boolean | null>(null);
-  const [tierIndex, setTierIndex] = useState(finalTierIndex);
   const [shownWords, setShownWords] = useState(words.length);
   const [copied, setCopied] = useState(false);
-  const [handle, setHandle] = useState("");
   const [shareHint, setShareHint] = useState("");
-  const monoRef = useRef<HTMLSpanElement>(null);
+  const cardRef = useRef<Blob | null>(null);
 
   useEffect(() => {
     const isMine = loadLastResult() === code;
@@ -38,57 +32,40 @@ export function ResultView({ code, score, rig }: Props) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMine(isMine);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setTierIndex(0);
     setShownWords(0);
   }, [code]);
 
   useEffect(() => {
-    if (tierIndex < finalTierIndex) {
-      const t = setTimeout(() => setTierIndex((i) => i + 1), 140);
-      return () => clearTimeout(t);
-    }
-    if (shownWords < words.length) {
-      const t = setTimeout(() => setShownWords((n) => n + 1), 70);
-      return () => clearTimeout(t);
-    }
-  }, [tierIndex, finalTierIndex, shownWords, words.length]);
+    if (shownWords >= words.length) return;
+    const t = setTimeout(() => setShownWords((n) => n + 1), 70);
+    return () => clearTimeout(t);
+  }, [shownWords, words.length]);
 
-  const generating = tierIndex < finalTierIndex || shownWords < words.length;
+  // Fetch the card once up front, so the share sheet can open straight from the click,
+  // which mobile browsers require.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(cardSrc)
+      .then((res) => (res.ok ? res.blob() : null))
+      .then((blob) => {
+        if (!cancelled) cardRef.current = blob;
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [cardSrc]);
+
+  const generating = shownWords < words.length;
   const url = resultUrl(code);
-  const intent = `https://x.com/intent/post?text=${encodeURIComponent(shareText(score, rig))}&url=${encodeURIComponent(url)}`;
+  const intent = `https://x.com/intent/post?text=${encodeURIComponent(shareText(score))}&url=${encodeURIComponent(url)}`;
+  const fileName = `localaitest-${code}.png`;
 
   async function copyLink() {
     await navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
-
-  // The card is pre-rendered so the share sheet can open straight from the click,
-  // which mobile browsers require.
-  const cardRef = useRef<Blob | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const timer = setTimeout(async () => {
-      await document.fonts.ready;
-      const fontFamily = monoRef.current ? getComputedStyle(monoRef.current).fontFamily : "monospace";
-      const canvas = document.createElement("canvas");
-      drawCard(
-        canvas,
-        { score, tier: tier.name, roast, rigLabel: rig ? RIG_CLASSES[rig].label : null, handle: cleanHandle(handle), domain: SITE_DOMAIN },
-        fontFamily,
-      );
-      canvas.toBlob((blob) => {
-        if (!cancelled) cardRef.current = blob;
-      }, "image/png");
-    }, 250);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [score, tier.name, roast, rig, handle]);
-
-  const fileName = `localaitest-${code}.png`;
 
   function download() {
     if (!cardRef.current) return;
@@ -108,7 +85,7 @@ export function ResultView({ code, score, rig }: Props) {
       const file = new File([blob], fileName, { type: "image/png" });
       if (navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], text: `${shareText(score, rig)} ${url}` });
+          await navigator.share({ files: [file], text: `${shareText(score)} ${url}` });
           return;
         } catch (e) {
           if (e instanceof DOMException && e.name === "AbortError") return;
@@ -126,18 +103,18 @@ export function ResultView({ code, score, rig }: Props) {
     window.open(intent, "_blank", "noopener,noreferrer");
     setShareHint(
       imageCopied
-        ? "Your score image is copied. Paste it into the post with ⌘V (Ctrl+V on Windows)."
+        ? "Your card is copied. Paste it into the post with ⌘V (Ctrl+V on Windows)."
         : "Couldn't copy the image. Use Download image and attach it to your post.",
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-[720px] px-4 pt-12">
-      <span ref={monoRef} className="font-mono hidden" aria-hidden="true" />
+    <main className="mx-auto w-full max-w-[720px] px-4 pt-10">
       {mine === false && (
-        <div className="mb-8 rounded-lg border border-green-200 bg-green-50 p-4">
+        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
           <p className="text-lg font-semibold text-zinc-900">
-            Your friend runs at <span className="font-mono text-accent-dark">{tier.name}</span>. Are you more quantized?
+            Your friend is {tier.article ? `${tier.article} ` : ""}
+            {tier.rank}. Are you more local?
           </p>
           <Link href="/" className={`${buttonBase} mt-3 bg-accent text-white hover:bg-accent-dark`}>
             Take the test
@@ -145,42 +122,54 @@ export function ResultView({ code, score, rig }: Props) {
         </div>
       )}
 
-      <p className="font-mono text-sm text-zinc-500">{mine === false ? "Their Local AI Purity Test score" : "Your Local AI Purity Test score"}</p>
-      <div className="mt-2 rounded-xl bg-term p-6 sm:p-8 text-zinc-200 shadow-lg">
-        <p className="font-mono text-sm text-term-green">$ localaitest --score</p>
-        <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2">
-          <p className="font-mono font-bold text-white leading-none">
-            <span className="text-7xl sm:text-8xl">{score}</span>
-            <span className="text-2xl text-zinc-500">/100</span>
-          </p>
-          <p className="font-mono">
-            <span className="block text-sm text-zinc-400">running at</span>
-            <span className="block text-4xl sm:text-5xl font-bold text-term-green">{TIERS[tierIndex].name}</span>
-          </p>
-        </div>
-        <p className={`mt-6 min-h-[3.5rem] text-lg text-zinc-300 ${generating ? "cursor" : ""}`} aria-live="polite">
-          {words.slice(0, shownWords).join(" ")}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={cardSrc}
+        alt={`${youAre(tier)}. ${score} out of ${TOTAL_ITEMS} on the Local AI Purity Test.`}
+        width={1200}
+        height={630}
+        className="aspect-[1200/630] w-full rounded-2xl shadow-lg"
+        style={{ backgroundColor: tier.level === 8 ? "#0a0a0a" : tier.color }}
+      />
+
+      <p className={`mt-5 min-h-[3.5rem] text-lg text-zinc-700 ${generating ? "cursor" : ""}`} aria-live="polite">
+        {words.slice(0, shownWords).join(" ")}
+      </p>
+      <p className="mt-1 font-mono text-xs text-zinc-400">
+        {generating ? `generating… ${tokPerSec} tok/s` : `done · ${tokPerSec} tok/s · 0 cloud calls`}
+      </p>
+
+      {rig && (
+        <p className="mt-4 text-sm text-zinc-600">
+          <span className="mr-2 inline-block rounded-full border border-zinc-300 px-2.5 py-0.5 font-mono text-xs text-zinc-800">
+            {RIG_CLASSES[rig].label}
+          </span>
+          {RIG_CLASSES[rig].advice}
         </p>
-        <p className="mt-4 font-mono text-xs text-zinc-500">
-          {generating ? `generating… ${tokPerSec} tok/s` : `done · ${tokPerSec} tok/s · 0 cloud calls`}
-        </p>
-        {rig && (
-          <div className="mt-5 border-t border-zinc-800 pt-4">
-            <span className="inline-block rounded-full border border-term-green px-3 py-1 font-mono text-sm text-term-green">
-              {RIG_CLASSES[rig].label}
-            </span>
-            <p className="mt-2 text-sm text-zinc-400">{RIG_CLASSES[rig].advice}</p>
-          </div>
-        )}
-      </div>
+      )}
 
       {mine !== false && (
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-3">
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={shareOnX} className={`${buttonBase} bg-zinc-900 text-white hover:bg-zinc-700`}>
+            <button
+              type="button"
+              onClick={shareOnX}
+              className={`${buttonBase} bg-zinc-900 text-white hover:bg-zinc-700`}
+            >
               Share on 𝕏
             </button>
-            <button type="button" onClick={copyLink} className={`${buttonBase} border border-zinc-300 hover:border-zinc-500`}>
+            <button
+              type="button"
+              onClick={download}
+              className={`${buttonBase} border border-zinc-300 hover:border-zinc-500`}
+            >
+              Download image
+            </button>
+            <button
+              type="button"
+              onClick={copyLink}
+              className={`${buttonBase} border border-zinc-300 hover:border-zinc-500`}
+            >
               {copied ? "Copied!" : "Copy link"}
             </button>
             <Link href="/" className={`${buttonBase} border border-zinc-300 hover:border-zinc-500`}>
@@ -192,26 +181,15 @@ export function ResultView({ code, score, rig }: Props) {
               {shareHint}
             </p>
           )}
-          <div className="flex flex-wrap items-end gap-3 rounded-lg border border-zinc-200 p-4">
-            <label className="flex-1 min-w-[180px]">
-              <span className="mb-1 block text-sm font-medium text-zinc-700">Put your X handle on the image (optional)</span>
-              <input
-                value={handle}
-                onChange={(e) => setHandle(e.target.value)}
-                placeholder="@yourhandle"
-                autoComplete="off"
-                autoCapitalize="none"
-                spellCheck={false}
-                className="w-full rounded-md border border-zinc-300 px-2.5 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
-              />
-            </label>
-            <button type="button" onClick={download} className={`${buttonBase} bg-accent text-white hover:bg-accent-dark`}>
-              Download image
-            </button>
-            <p className="w-full text-xs text-zinc-500">The image is drawn in your browser. Your handle isn&apos;t sent anywhere.</p>
-          </div>
         </div>
       )}
+
+      <section aria-labelledby="tiers-heading" className="mt-10 rounded-lg border border-zinc-200 p-4 sm:p-5">
+        <h2 id="tiers-heading" className="mb-3 text-sm font-semibold text-zinc-900">
+          Scoring reference
+        </h2>
+        <TierLadder score={score} />
+      </section>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 # The Local AI Purity Test
 
-The official purity test for people who run open-weight models at home. 100 questions, and your score is a quant level: FP32 if you're pure, IQ1_S if you are the weights now.
+The official purity test for people who run open-weight models at home. 100 questions. Your score is how many you've done, and it earns you a rank from Curious to Legend.
 
 **Take it at [localaitest.com](https://localaitest.com)**
 
@@ -8,22 +8,24 @@ The official purity test for people who run open-weight models at home. 100 ques
 
 ## How it works
 
-Tick everything you've done. Your score is 100 minus the number of items you ticked, so a higher score means you're more pure.
+Tick everything you've done. Your score is the number of items you ticked, so higher means more local.
 
-| Score | Tier | |
+Your score earns a rank, from Curious to Legend:
+
+| Score | Rank | Quant |
 |---|---|---|
-| 95–100 | `FP32` | You think a GGUF is a Pokémon |
-| 85–94 | `FP16` | |
-| 70–84 | `Q8_0` | |
-| 55–69 | `Q6_K` | |
-| 40–54 | `Q5_K_M` | |
-| 25–39 | `Q4_K_M` | The default quant, just like you |
-| 10–24 | `Q2_K` | |
-| 0–9 | `IQ1_S` | You are the weights now |
+| 0–5 | Curious | `FP32` |
+| 6–15 | Explorer | `FP16` |
+| 16–30 | Tinkerer | `Q8_0` |
+| 31–45 | Regular | `Q6_K` |
+| 46–60 | Enthusiast | `Q5_K_M` |
+| 61–75 | Builder | `Q4_K_M` |
+| 76–90 | Power User | `Q2_K` |
+| 91–100 | Legend | `IQ1_S` |
 
-Every score gets its own share link (like [`/r/34-rich`](https://localaitest.com/r/34-rich)) and its own share card:
+Every score gets its own share link (like [`/r/66-rich`](https://localaitest.com/r/66-rich)) and its own rank card, in the rank's color. Legend gets black and gold:
 
-![A score card for 34/100 at Q4_K_M on a GPU rich rig](docs/share-card.png)
+![A rank card: You're a Builder, 66/100](docs/share-card.png)
 
 ### Rig card
 
@@ -63,8 +65,8 @@ Enter a Hugging Face or GitHub username and the test ticks the items it can prov
 ## Stack
 
 - [Next.js 16](https://nextjs.org) (App Router, Cache Components) with TypeScript and [Tailwind CSS 4](https://tailwindcss.com)
-- Share cards generated with `next/og`; all 505 result pages are prerendered at build time
-- The downloadable score image is drawn on a canvas in the browser, so an optional X handle never leaves the device
+- Rank cards generated with `next/og`, with a laurel wreath drawn as SVG in each rank's color; all 505 result pages are prerendered at build time
+- The results page, the downloaded image, and the image attached to X posts all use the same rendered card
 - Hosted on [Vercel](https://vercel.com)
 
 ## Project layout
@@ -72,10 +74,11 @@ Enter a Hugging Face or GitHub username and the test ticks the items it can prov
 | Path | What's there |
 |---|---|
 | `src/data/items.ts` | The 100 items, their hover jokes, and which ones can be autofilled |
-| `src/lib/score.ts` | Quant tiers, roasts, rig badges, result codes, and share text |
+| `src/lib/score.ts` | Ranks, quant tiers, roasts, rig badges, result codes, and share text |
 | `src/lib/rig.ts` | Hugging Face hardware parsing, the device picker list, and hardware rules |
 | `src/lib/detect.ts` | Browser-side Hugging Face and GitHub lookups |
-| `src/lib/og.tsx` | The share card layouts |
+| `src/lib/og.tsx` | The rank card and homepage card layouts |
+| `src/lib/laurel.ts` | The laurel wreath, drawn as SVG |
 | `src/components/` | The checklist, results page, status bar, autofill panel, and popups |
 
 ## Develop
