@@ -4,6 +4,8 @@ export type DetectRule =
   | "hw-mac-64"
   | "hw-mac-512"
   | "hw-spark-or-strix"
+  | "hw-two-sparks"
+  | "hw-four-sparks"
   | "hf-lora"
   | "hf-merge"
   | "hf-uploaded"
@@ -38,7 +40,7 @@ export const ITEMS: Item[] = [
   { id: 9, text: "Bought a DGX Spark or a Strix Halo (Ryzen AI Max) mini PC", detect: "hw-spark-or-strix" },
   { id: 10, text: "Priced out an RTX Pro 6000 and closed the tab", joke: "The cart is still open in another tab." },
   { id: 11, text: "Used PCIe risers or an open-air mining frame" },
-  { id: 12, text: "Tripped a breaker or needed a new circuit for your rig", joke: "Your landlord has questions." },
+  { id: 12, text: "Tripped a breaker or needed a new circuit for your rig", joke: "A quick power upgrade to the house." },
   { id: 13, text: "Power-limited or undervolted your GPUs" },
   { id: 14, text: "Know your GPU's memory bandwidth by heart", joke: "Nobody asked. You told them anyway." },
   { id: 15, text: "Made a tokens-per-second-per-dollar spreadsheet" },
@@ -104,7 +106,7 @@ export const ITEMS: Item[] = [
   { id: 75, text: "Got a PR merged into llama.cpp, Ollama, or vLLM", detect: "gh-merged-pr", joke: "Respect. Genuinely." },
   { id: 76, text: "Followed Georgi Gerganov on X" },
   { id: 77, text: 'Watched a "run DeepSeek locally in 5 minutes" YouTube video', joke: "It took 5 hours." },
-  { id: 78, text: "Built your own vibe eval" },
+  { id: 78, text: "Stopped using the existing recipes and started cooking your own on a DGX Spark", joke: "The full arc." },
   { id: 79, text: "Stopped trusting benchmarks after a model you loved scored badly" },
   { id: 80, text: "Plugged your idle Mac into Darkbloom while you slept", joke: "Your Mac has a side hustle now." },
   { id: 81, text: "Explained quantization to a non-tech friend at dinner", joke: "They did not ask for a second dinner." },
@@ -117,10 +119,10 @@ export const ITEMS: Item[] = [
   { id: 88, text: "Named your rig" },
   { id: 89, text: 'Said "I\'ll just run it locally" about what became a 3-weekend project' },
   { id: 90, text: "Ran a local model on a plane with no Wi-Fi and felt superior", joke: "The person in 14C did not care." },
-  { id: 91, text: "Chose a laptop based on memory bandwidth" },
+  { id: 91, text: "Bought a second DGX Spark", detect: "hw-two-sparks", joke: "Then a third. It's fine." },
   { id: 92, text: "Have a model running right now", joke: "Which one? Be specific." },
   { id: 93, text: "Opened a terminal at a party to show someone your local model" },
-  { id: 94, text: "Made a quant tier list" },
+  { id: 94, text: "Own 4 or more DGX Sparks", detect: "hw-four-sparks", joke: "Some people stopped at 3. Some people are building The All Spark." },
   { id: 95, text: 'Tweaked temperature and top_p to "fix" a model' },
   { id: 96, text: 'Have a folder named "models" and another named "models2"' },
   { id: 97, text: "Tried running a model bigger than your RAM with mmap and swap" },

@@ -1,8 +1,9 @@
 export const TOTAL_ITEMS = 100;
 
 /**
- * `rank` is the identity people share ("I'm a Builder"); `level` runs 1–8 as you get more local;
- * `color` is the rank's accent on the share card.
+ * `rank` is the identity people share ("I'm a Builder"); `level` runs 1–9 as you get more local;
+ * `color` is the rank's accent on the share card. `card` picks the card style: most ranks get a
+ * colored poster, Legend gets black and gold, and the secret God Mode gets its own.
  */
 export type Tier = {
   min: number;
@@ -13,29 +14,50 @@ export type Tier = {
   article: "" | "a" | "an";
   level: number;
   color: string;
+  card: "poster" | "legend" | "god";
   roast: string;
+  /** Overrides "You're a ___" for ranks that don't read that way, like "You've unlocked God Mode". */
+  you?: string;
 };
 
-// Your score is how many items you ticked, so ranks run from Curious (0) up to Legend (100).
+// Your score is how many items you ticked, so ranks run from Curious (0) up to Legend, with a
+// secret God Mode for a perfect 100.
 export const TIERS: Tier[] = [
-  { min: 0, max: 5, name: "FP32", rank: "Curious", article: "", level: 1, color: "#7dd3fc", roast: "You think a GGUF is a Pokémon. Stay pure. Touch grass, not GPUs." },
-  { min: 6, max: 15, name: "FP16", rank: "Explorer", article: "an", level: 2, color: "#5eead4", roast: "You've heard of Ollama once, from a coworker, and nodded politely." },
-  { min: 16, max: 30, name: "Q8_0", rank: "Tinkerer", article: "a", level: 3, color: "#4ade80", roast: "Barely compressed. You have one model on your laptop and you mention it at parties." },
-  { min: 31, max: 45, name: "Q6_K", rank: "Regular", article: "a", level: 4, color: "#a3e635", roast: "Still mostly coherent. Your browser has a Hugging Face tab that never closes." },
-  { min: 46, max: 60, name: "Q5_K_M", rank: "Enthusiast", article: "an", level: 5, color: "#facc15", roast: "Noticeable quality loss. You now say \"tokens per second\" in normal conversation." },
-  { min: 61, max: 75, name: "Q4_K_M", rank: "Builder", article: "a", level: 6, color: "#fb923c", roast: "The default quant, just like you. Good enough for everyone, great for no one." },
-  { min: 76, max: 90, name: "Q2_K", rank: "Power User", article: "a", level: 7, color: "#f87171", roast: "Heavily quantized. You speak only in benchmark scores and your fans never stop spinning." },
-  { min: 91, max: 100, name: "IQ1_S", rank: "Legend", article: "a", level: 8, color: "#f5c542", roast: "You are the weights now. Please go outside. The sun is free compute." },
+  { min: 0, max: 5, name: "FP32", rank: "Curious", article: "", level: 1, color: "#7dd3fc", card: "poster", roast: "You think a GGUF is a Pokémon and your GPU is for spreadsheets. Welcome to the rabbit hole." },
+  { min: 6, max: 15, name: "FP16", rank: "Explorer", article: "an", level: 2, color: "#5eead4", card: "poster", roast: "You installed Ollama once, ran one model, said \"huh, cool,\" and went right back to ChatGPT." },
+  { min: 16, max: 30, name: "Q8_0", rank: "Tinkerer", article: "a", level: 3, color: "#4ade80", card: "poster", roast: "You have exactly one model on your laptop, and you bring it up at every dinner party." },
+  { min: 31, max: 45, name: "Q6_K", rank: "Regular", article: "a", level: 4, color: "#a3e635", card: "poster", roast: "Your Hugging Face tab hasn't been closed in months, and 80% of your disk is models you'll never run." },
+  { min: 46, max: 60, name: "Q5_K_M", rank: "Enthusiast", article: "an", level: 5, color: "#facc15", card: "poster", roast: "You say \"tokens per second\" in normal conversation. Your friends have started nodding without listening." },
+  { min: 61, max: 75, name: "Q4_K_M", rank: "Builder", article: "a", level: 6, color: "#fb923c", card: "poster", roast: "Your rig has a name, its own circuit breaker, and more RAM than your first three laptops combined." },
+  { min: 76, max: 90, name: "Q2_K", rank: "Power User", article: "a", level: 7, color: "#f87171", card: "poster", roast: "You've rebuilt llama.cpp more times than you've called your mom this year." },
+  { min: 91, max: 99, name: "IQ1_S", rank: "Legend", article: "a", level: 8, color: "#f5c542", card: "legend", roast: "You are the weights now. Please go outside. The sun is free compute." },
+  { min: 100, max: 100, name: "0-bit", rank: "God Mode", article: "", level: 9, color: "#c4b5fd", card: "god", roast: "You don't run local models. You ARE r/LocalLLaMA.", you: "You've unlocked God Mode" },
 ];
 
-/** "You're an Explorer", "You're Curious". */
+/** "You're an Explorer", "You're Curious", "You've unlocked God Mode". */
 export function youAre(tier: Tier): string {
+  if (tier.you) return tier.you;
   return tier.article ? `You're ${tier.article} ${tier.rank}` : `You're ${tier.rank}`;
 }
 
-/** The sharer's voice, for posts and link previews: "I'm an Explorer". */
+/** The sharer's voice, for posts and link previews: "I'm an Explorer", "I unlocked God Mode". */
 export function iAm(tier: Tier): string {
-  return youAre(tier).replace("You're", "I'm");
+  return youAre(tier).replace("You've", "I've").replace("You're", "I'm");
+}
+
+/** Someone else's result, for the banner a friend sees: "Your friend is an Explorer". */
+export function theyAre(tier: Tier): string {
+  return youAre(tier).replace("You've", "Your friend has").replace("You're", "Your friend is");
+}
+
+/** The words before the rank name on the card: "You're a", "You've unlocked". */
+export function leadFor(tier: Tier): string {
+  return youAre(tier).slice(0, -tier.rank.length).trim();
+}
+
+/** The color behind a rank's card, used while the card image loads. */
+export function cardBackground(tier: Tier): string {
+  return tier.card === "poster" ? tier.color : "#0a0a0a";
 }
 
 export function tierFor(score: number): Tier {
@@ -44,10 +66,9 @@ export function tierFor(score: number): Tier {
   return tier;
 }
 
-/** The two extremes get their own line instead of the tier roast. */
+/** Ticking nothing gets its own line instead of the Curious roast. */
 export function roastFor(score: number): string {
   if (score === 0) return "Are you lost? The cloud is that way. ☁️";
-  if (score === 100) return "You don't run local models. You ARE r/LocalLLaMA.";
   return tierFor(score).roast;
 }
 

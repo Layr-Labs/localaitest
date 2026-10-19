@@ -2,7 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { RIG_CLASSES, roastFor, shareText, tierFor, TOTAL_ITEMS, youAre, type RigClass } from "@/lib/score";
+import {
+  cardBackground,
+  RIG_CLASSES,
+  roastFor,
+  shareText,
+  theyAre,
+  tierFor,
+  TOTAL_ITEMS,
+  youAre,
+  type RigClass,
+} from "@/lib/score";
 import { resultUrl } from "@/lib/site";
 import { loadLastResult } from "@/lib/storage";
 import { TierLadder } from "./TierLadder";
@@ -13,33 +23,20 @@ const buttonBase = "inline-flex items-center justify-center rounded-md px-4 py-2
 
 export function ResultView({ code, score, rig }: Props) {
   const tier = tierFor(score);
-  const roast = roastFor(score);
-  const words = roast.split(" ");
-  // Fake but stable generation speed, so the same score always "ran" at the same speed.
-  const tokPerSec = (11 + ((score * 37) % 70) / 10).toFixed(1);
   // The same image the link preview uses, so the page, the download, and the post always match.
   const cardSrc = `/r/${code}/opengraph-image`;
 
   const [mine, setMine] = useState<boolean | null>(null);
-  const [shownWords, setShownWords] = useState(words.length);
   const [copied, setCopied] = useState(false);
   const [shareHint, setShareHint] = useState("");
   const cardRef = useRef<Blob | null>(null);
 
   useEffect(() => {
     const isMine = loadLastResult() === code;
-    // Both values depend on browser-only state (localStorage, reduced-motion preference).
+    // Depends on localStorage, which only exists in the browser.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMine(isMine);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setShownWords(0);
   }, [code]);
-
-  useEffect(() => {
-    if (shownWords >= words.length) return;
-    const t = setTimeout(() => setShownWords((n) => n + 1), 70);
-    return () => clearTimeout(t);
-  }, [shownWords, words.length]);
 
   // Fetch the card once up front, so the share sheet can open straight from the click,
   // which mobile browsers require.
@@ -56,7 +53,6 @@ export function ResultView({ code, score, rig }: Props) {
     };
   }, [cardSrc]);
 
-  const generating = shownWords < words.length;
   const url = resultUrl(code);
   const intent = `https://x.com/intent/post?text=${encodeURIComponent(shareText(score))}&url=${encodeURIComponent(url)}`;
   const fileName = `localaitest-${code}.png`;
@@ -112,10 +108,7 @@ export function ResultView({ code, score, rig }: Props) {
     <main className="mx-auto w-full max-w-[720px] px-4 pt-10">
       {mine === false && (
         <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
-          <p className="text-lg font-semibold text-zinc-900">
-            Your friend is {tier.article ? `${tier.article} ` : ""}
-            {tier.rank}. Are you more local?
-          </p>
+          <p className="text-lg font-semibold text-zinc-900">{theyAre(tier)}. Are you more local?</p>
           <Link href="/" className={`${buttonBase} mt-3 bg-accent text-white hover:bg-accent-dark`}>
             Take the test
           </Link>
@@ -125,19 +118,12 @@ export function ResultView({ code, score, rig }: Props) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={cardSrc}
-        alt={`${youAre(tier)}. ${score} out of ${TOTAL_ITEMS} on the Local AI Purity Test.`}
+        alt={`${youAre(tier)}. ${score} out of ${TOTAL_ITEMS} on the Local AI Purity Test. ${roastFor(score)}`}
         width={1200}
         height={630}
         className="aspect-[1200/630] w-full rounded-2xl shadow-lg"
-        style={{ backgroundColor: tier.level === 8 ? "#0a0a0a" : tier.color }}
+        style={{ backgroundColor: cardBackground(tier) }}
       />
-
-      <p className={`mt-5 min-h-[3.5rem] text-lg text-zinc-700 ${generating ? "cursor" : ""}`} aria-live="polite">
-        {words.slice(0, shownWords).join(" ")}
-      </p>
-      <p className="mt-1 font-mono text-xs text-zinc-400">
-        {generating ? `generating… ${tokPerSec} tok/s` : `done · ${tokPerSec} tok/s · 0 cloud calls`}
-      </p>
 
       {rig && (
         <p className="mt-4 text-sm text-zinc-600">
@@ -177,7 +163,10 @@ export function ResultView({ code, score, rig }: Props) {
             </Link>
           </div>
           {shareHint && (
-            <p role="status" className="rounded-md bg-green-50 px-3 py-2 text-sm text-accent-dark ring-1 ring-green-200">
+            <p
+              role="status"
+              className="rounded-md bg-green-50 px-3 py-2 text-sm text-accent-dark ring-1 ring-green-200"
+            >
               {shareHint}
             </p>
           )}

@@ -48,7 +48,7 @@ export function StatusBar({ checked, rig }: { checked: number; rig: Rig | null }
               VRAM {gb(used)} / {gb(capacity)} GB
             </span>
             <span className={`truncate ${overflow ? "text-red-400" : "text-zinc-500"}`}>
-              {overflow ? "offloading to CPU… 0.4 tok/s" : rigLabel ?? "assuming one 24GB card"}
+              {overflow ? "offloading to CPU… 0.4 tok/s" : (rigLabel ?? "assuming one 24GB card")}
             </span>
           </div>
           <div
@@ -65,9 +65,14 @@ export function StatusBar({ checked, rig }: { checked: number; rig: Rig | null }
             />
           </div>
         </div>
-        <div className={`flex items-center gap-1.5 shrink-0 ${temp >= 80 ? "text-red-400" : "text-zinc-300"}`}>
+        <div
+          className={`flex items-center gap-1.5 shrink-0 ${temp >= 80 ? "text-red-400" : "text-zinc-300"}`}
+          title="It heats up as you tick boxes."
+        >
           <Fan checked={checked} />
-          <span aria-label={`GPU temperature ${temp} degrees`}>{temp}°C</span>
+          <span aria-label={`Your GPU temperature: ${temp} degrees. It heats up as you tick boxes.`}>
+            Your GPU: {temp}°C
+          </span>
         </div>
       </div>
     </div>

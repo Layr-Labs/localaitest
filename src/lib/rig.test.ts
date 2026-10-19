@@ -43,3 +43,16 @@ test("picker lists Apple Silicon first and every option has a valid default memo
   const m3Ultra = DEVICE_OPTIONS.find((o) => o.name === "Apple M3 Ultra")!;
   assert.deepEqual(hardwareMatches([{ name: m3Ultra.name, kind: m3Ultra.kind, mem: 512, num: 1 }]).sort(), ["hw-mac-512", "hw-mac-64"]);
 });
+
+test("DGX Spark counts tick the second-Spark and 4+ Spark items", () => {
+  assert.deepEqual(hardwareMatches([{ name: "GB10", kind: "unified", mem: 128, num: 1 }]), ["hw-spark-or-strix"]);
+  assert.deepEqual(hardwareMatches([{ name: "GB10", kind: "unified", mem: 128, num: 3 }]).sort(), [
+    "hw-spark-or-strix",
+    "hw-two-sparks",
+  ]);
+  assert.deepEqual(hardwareMatches([{ name: "DGX Spark", kind: "unified", mem: 128, num: 36 }]).sort(), [
+    "hw-four-sparks",
+    "hw-spark-or-strix",
+    "hw-two-sparks",
+  ]);
+});

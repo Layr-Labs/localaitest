@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { allCodes, formatCode, parseCode, rigClassFor, roastFor, shareText, tierFor, TIERS, youAre } from "./score.ts";
+import { allCodes, formatCode, parseCode, rigClassFor, roastFor, shareText, theyAre, tierFor, TIERS, youAre } from "./score.ts";
 
 test("tier boundaries", () => {
   const expected: [number, string][] = [
     [0, "FP32"], [5, "FP32"], [6, "FP16"], [15, "FP16"], [16, "Q8_0"], [30, "Q8_0"],
     [31, "Q6_K"], [45, "Q6_K"], [46, "Q5_K_M"], [60, "Q5_K_M"], [61, "Q4_K_M"], [75, "Q4_K_M"],
-    [76, "Q2_K"], [90, "Q2_K"], [91, "IQ1_S"], [100, "IQ1_S"],
+    [76, "Q2_K"], [90, "Q2_K"], [91, "IQ1_S"], [99, "IQ1_S"], [100, "0-bit"],
   ];
   for (const [score, tier] of expected) assert.equal(tierFor(score).name, tier, `score ${score}`);
   assert.throws(() => tierFor(101));
@@ -15,7 +15,8 @@ test("tier boundaries", () => {
 
 test("more ticks means a higher rank", () => {
   assert.equal(tierFor(0).rank, "Curious");
-  assert.equal(tierFor(100).rank, "Legend");
+  assert.equal(tierFor(99).rank, "Legend");
+  assert.equal(tierFor(100).rank, "God Mode");
   for (let s = 1; s <= 100; s++) assert.ok(tierFor(s).level >= tierFor(s - 1).level, `score ${s}`);
 });
 
@@ -45,12 +46,12 @@ test("special roasts at the extremes", () => {
   assert.equal(roastFor(37), tierFor(37).roast);
 });
 
-test("ranks run from Curious to Legend with levels 1 to 8", () => {
+test("ranks run from Curious to God Mode with levels 1 to 9", () => {
   assert.deepEqual(
     TIERS.map((t) => t.rank),
-    ["Curious", "Explorer", "Tinkerer", "Regular", "Enthusiast", "Builder", "Power User", "Legend"],
+    ["Curious", "Explorer", "Tinkerer", "Regular", "Enthusiast", "Builder", "Power User", "Legend", "God Mode"],
   );
-  assert.deepEqual(TIERS.map((t) => t.level), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.deepEqual(TIERS.map((t) => t.level), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
 
 test("rank phrases use the right article", () => {
@@ -63,6 +64,7 @@ test("rank phrases use the right article", () => {
     "You're a Builder",
     "You're a Power User",
     "You're a Legend",
+    "You've unlocked God Mode",
   ]);
 });
 
@@ -70,4 +72,7 @@ test("share text", () => {
   assert.equal(shareText(66), "I'm a Builder on the Local AI Purity Test: 66/100.");
   assert.equal(shareText(3), "I'm Curious on the Local AI Purity Test: 3/100.");
   assert.equal(shareText(12), "I'm an Explorer on the Local AI Purity Test: 12/100.");
+  assert.equal(shareText(100), "I've unlocked God Mode on the Local AI Purity Test: 100/100.");
+  assert.equal(theyAre(tierFor(100)), "Your friend has unlocked God Mode");
+  assert.equal(theyAre(tierFor(66)), "Your friend is a Builder");
 });

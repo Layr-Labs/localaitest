@@ -10,7 +10,7 @@ The official purity test for people who run open-weight models at home. 100 ques
 
 Tick everything you've done. Your score is the number of items you ticked, so higher means more local.
 
-Your score earns a rank, from Curious to Legend:
+Your score earns a rank, from Curious to Legend. A perfect 100 unlocks a secret one:
 
 | Score | Rank | Quant |
 |---|---|---|
@@ -21,9 +21,10 @@ Your score earns a rank, from Curious to Legend:
 | 46–60 | Enthusiast | `Q5_K_M` |
 | 61–75 | Builder | `Q4_K_M` |
 | 76–90 | Power User | `Q2_K` |
-| 91–100 | Legend | `IQ1_S` |
+| 91–99 | Legend | `IQ1_S` |
+| 100 | ??? | ??? |
 
-Every score gets its own share link (like [`/r/66-rich`](https://localaitest.com/r/66-rich)) and its own rank card, in the rank's color. Legend gets black and gold:
+Every score gets its own share link (like [`/r/66-rich`](https://localaitest.com/r/66-rich)) and its own rank card, with a roast in the rank's color. Legend gets black and gold:
 
 ![A rank card: You're a Builder, 66/100](docs/share-card.png)
 
@@ -42,16 +43,15 @@ Optionally add your hardware, either read from the hardware you list on your Hug
 
 Enter a Hugging Face or GitHub username and the test ticks the items it can prove from public data, each tagged "detected via…" so you can untick it:
 
-- **Hugging Face:** your listed hardware (two 3090s, a 64GB or 512GB Mac, a DGX Spark or Strix Halo), uploaded models, GGUFs, LoRAs, merges, and whether your downloads beat your followers
+- **Hugging Face:** your listed hardware (two 3090s, a 64GB or 512GB Mac, a DGX Spark or Strix Halo, two or more Sparks, four or more Sparks), uploaded models, GGUFs, LoRAs, merges, and whether your downloads beat your followers
 - **GitHub:** starring llama.cpp, and opening issues or getting PRs merged in llama.cpp, Ollama, or vLLM
 
 ### The jokes
 
 - A VRAM bar that fills as you tick items and overflows into "offloading to CPU… 0.4 tok/s"
-- A GPU fan and temperature that climb with your answers
+- A GPU fan and temperature ("Your GPU: 68°C") that climb with your answers
 - An "Ask an AI Assistant" button that runs out of CUDA memory
-- Hover jokes on 34 items, including a deliberately bad pelican on a bicycle
-- A score reveal that streams like a local model, at a fake tokens-per-second rate
+- Hover jokes on 37 items, including a deliberately bad pelican on a bicycle
 - A hidden phrase: type `gguf when` anywhere on the page
 - A 404 page that tells you to `ollama pull` it
 

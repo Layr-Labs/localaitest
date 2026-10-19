@@ -1,8 +1,8 @@
 import { TIERS } from "@/lib/score";
 
 /**
- * The scoring reference: all 8 ranks, from Curious to Legend.
- * Pass `score` to highlight the reader's tier.
+ * The scoring reference: every rank from Curious to Legend. God Mode stays a mystery row
+ * until you unlock it. Pass `score` to highlight the reader's tier.
  */
 export function TierLadder({ score, dark = false }: { score?: number; dark?: boolean }) {
   const muted = "text-zinc-500";
@@ -15,6 +15,7 @@ export function TierLadder({ score, dark = false }: { score?: number; dark?: boo
       <ol className="space-y-0.5">
         {TIERS.map((tier) => {
           const mine = score !== undefined && score >= tier.min && score <= tier.max;
+          const hidden = tier.card === "god" && !mine;
           const row = mine
             ? dark
               ? "bg-term-green/15 text-term-green ring-1 ring-term-green/40"
@@ -28,13 +29,13 @@ export function TierLadder({ score, dark = false }: { score?: number; dark?: boo
               className={`flex items-center gap-3 rounded-md px-2.5 py-1.5 ${row}`}
               aria-current={mine ? "true" : undefined}
             >
-              <span className="w-16 shrink-0 font-semibold">{tier.name}</span>
+              <span className="w-16 shrink-0 font-semibold">{hidden ? "???" : tier.name}</span>
               <span className="min-w-0 flex-1 truncate font-sans">
-                {tier.rank}
+                {hidden ? "???" : tier.rank}
                 {mine && <span className="ml-2 font-mono text-xs">← you</span>}
               </span>
               <span className="shrink-0 tabular-nums">
-                {tier.min}–{tier.max}
+                {tier.min === tier.max ? tier.min : `${tier.min}–${tier.max}`}
               </span>
             </li>
           );

@@ -42,6 +42,10 @@ export function hardwareMatches(devices: Device[]): DetectRule[] {
   if (devices.some((d) => d.kind === "apple" && d.mem >= 64)) rules.push("hw-mac-64");
   if (devices.some((d) => d.kind === "apple" && d.mem >= 512)) rules.push("hw-mac-512");
   if (devices.some((d) => /GB10|DGX Spark|Ryzen AI Max/i.test(d.name))) rules.push("hw-spark-or-strix");
+  // Hugging Face lists a DGX Spark by its chip, GB10.
+  const sparks = devices.filter((d) => /GB10|DGX Spark/i.test(d.name)).reduce((n, d) => n + d.num, 0);
+  if (sparks >= 2) rules.push("hw-two-sparks");
+  if (sparks >= 4) rules.push("hw-four-sparks");
   return rules;
 }
 

@@ -30,13 +30,13 @@ function leafPath(length: number, width: number): string {
   return `M0 0 Q${round(l * 0.5)} ${-w} ${l} 0 Q${round(l * 0.5)} ${w} 0 0 Z`;
 }
 
-/** The left branch. The right one is its mirror image. */
-function branch(color: string): string {
+/** The left branch. The right one is its mirror image. Leaf pairs cycle through `leaves`. */
+function branch(stem: string, leaves: string[]): string {
   const parts: string[] = [];
   const a = point(STEM_START);
   const b = point(STEM_END);
   parts.push(
-    `<path d="M${round(a.x)} ${round(a.y)} A${RADIUS} ${RADIUS} 0 0 1 ${round(b.x)} ${round(b.y)}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linecap="round"/>`,
+    `<path d="M${round(a.x)} ${round(a.y)} A${RADIUS} ${RADIUS} 0 0 1 ${round(b.x)} ${round(b.y)}" fill="none" stroke="${stem}" stroke-width="3.5" stroke-linecap="round"/>`,
   );
 
   for (let i = 0; i < PAIRS; i++) {
@@ -47,6 +47,7 @@ function branch(color: string): string {
     const width = 22 * scale;
     const base = point(deg);
     // Moving up the left side, the branch heads in direction `deg`; leaves angle up and out, and up and in.
+    const color = leaves[i % leaves.length];
     for (const tilt of [-38, 34]) {
       parts.push(
         `<path d="${leafPath(length, width)}" fill="${color}" transform="translate(${round(base.x)} ${round(base.y)}) rotate(${round(deg + tilt)})"/>`,
@@ -56,20 +57,21 @@ function branch(color: string): string {
   // A single leaf caps the tip of the branch.
   const tip = point(STEM_END);
   parts.push(
-    `<path d="${leafPath(28, 13)}" fill="${color}" transform="translate(${round(tip.x)} ${round(tip.y)}) rotate(${STEM_END})"/>`,
+    `<path d="${leafPath(28, 13)}" fill="${leaves[PAIRS % leaves.length]}" transform="translate(${round(tip.x)} ${round(tip.y)}) rotate(${STEM_END})"/>`,
   );
   return parts.join("");
 }
 
 export const LAUREL_SIZE = SIZE;
 
-/** The full wreath as an SVG string. */
-export function laurelSvg(color: string): string {
-  const left = branch(color);
+/** The full wreath as an SVG string: one color, or several for the leaves to cycle through. */
+export function laurelSvg(color: string | string[]): string {
+  const leaves = Array.isArray(color) ? color : [color];
+  const left = branch(leaves[0], leaves);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}"><g>${left}</g><g transform="translate(${SIZE} 0) scale(-1 1)">${left}</g></svg>`;
 }
 
 /** The wreath as a data URI, usable as an <img> source on the server or in the browser. */
-export function laurelDataUri(color: string): string {
+export function laurelDataUri(color: string | string[]): string {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(laurelSvg(color))}`;
 }
