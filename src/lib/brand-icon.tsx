@@ -4,17 +4,30 @@ import { join } from "node:path";
 // Same green as the site's accent color.
 const GREEN = "#16a34a";
 const TEXT = "#ffffff";
+const LINES = ["Local", "AI", "Test"];
 
 export async function brandIconFonts() {
-  const bold = await readFile(join(process.cwd(), "assets/fonts/Inter-Bold.ttf"));
-  return [{ name: "Inter", data: bold, weight: 700 as const, style: "normal" as const }];
+  const dir = join(process.cwd(), "assets/fonts");
+  const [bold, black] = await Promise.all([
+    readFile(join(dir, "Inter-Bold.ttf")),
+    readFile(join(dir, "Inter-Black.ttf")),
+  ]);
+  return [
+    { name: "Inter", data: bold, weight: 700 as const, style: "normal" as const },
+    { name: "Inter", data: black, weight: 900 as const, style: "normal" as const },
+  ];
 }
 
 /**
- * The stacked wordmark on the site green. The favicon uses "Local / AI" so it stays readable at
- * tab size; the login-screen logo adds "Test" because it's shown much larger.
+ * The stacked "Local / AI / Test" wordmark on the site green.
+ *
+ * At tab size (32px) each line only gets about 10 pixels, so small icons use the heaviest weight,
+ * fill the square almost edge to edge, and pack the lines tightly. Larger sizes have room to
+ * breathe. `rounded` gives the modern rounded-square shape; the Apple icon stays square because
+ * iOS rounds it itself.
  */
-export function BrandIcon({ size, lines = ["Local", "AI"] }: { size: number; lines?: string[] }) {
+export function BrandIcon({ size, rounded = true }: { size: number; rounded?: boolean }) {
+  const small = size <= 64;
   return (
     <div
       style={{
@@ -23,17 +36,19 @@ export function BrandIcon({ size, lines = ["Local", "AI"] }: { size: number; lin
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        paddingLeft: size * 0.09,
+        paddingLeft: size * (small ? 0.075 : 0.1),
+        paddingBottom: size * 0.02,
         background: GREEN,
+        borderRadius: rounded ? size * 0.22 : 0,
         color: TEXT,
         fontFamily: "Inter",
-        fontWeight: 700,
-        fontSize: size * (lines.length > 2 ? 0.27 : 0.34),
-        lineHeight: 0.95,
-        letterSpacing: "-0.05em",
+        fontWeight: small ? 900 : 700,
+        fontSize: size * (small ? 0.305 : 0.27),
+        lineHeight: small ? 0.84 : 0.95,
+        letterSpacing: small ? "-0.06em" : "-0.05em",
       }}
     >
-      {lines.map((line) => (
+      {LINES.map((line) => (
         <span key={line}>{line}</span>
       ))}
     </div>
