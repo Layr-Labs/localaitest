@@ -148,7 +148,7 @@ export function Checklist() {
           The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
         </p>
         <p className="mt-2 font-semibold text-zinc-900">
-          Caution: This is not a bucket list. Completing every item makes you a GPU-poor loser.
+          Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
         </p>
 
         <AutofillPanel rig={state.rig} onDetected={applyRules} onRigChange={changeRig} />
