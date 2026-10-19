@@ -10,8 +10,11 @@ export async function brandIconFonts() {
   return [{ name: "Inter", data: bold, weight: 700 as const, style: "normal" as const }];
 }
 
-/** "Local / AI" stacked, so the text stays large enough to read at tab size. */
-export function BrandIcon({ size }: { size: number }) {
+/**
+ * The stacked wordmark on the site green. The favicon uses "Local / AI" so it stays readable at
+ * tab size; the login-screen logo adds "Test" because it's shown much larger.
+ */
+export function BrandIcon({ size, lines = ["Local", "AI"] }: { size: number; lines?: string[] }) {
   return (
     <div
       style={{
@@ -25,13 +28,14 @@ export function BrandIcon({ size }: { size: number }) {
         color: TEXT,
         fontFamily: "Inter",
         fontWeight: 700,
-        fontSize: size * 0.34,
+        fontSize: size * (lines.length > 2 ? 0.27 : 0.34),
         lineHeight: 0.95,
         letterSpacing: "-0.05em",
       }}
     >
-      <span>Local</span>
-      <span>AI</span>
+      {lines.map((line) => (
+        <span key={line}>{line}</span>
+      ))}
     </div>
   );
 }
