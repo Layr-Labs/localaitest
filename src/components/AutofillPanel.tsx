@@ -35,8 +35,30 @@ function ticked(n: number): string {
 
 function GitHubMark() {
   return (
-    <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" fill="currentColor">
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
       <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+    </svg>
+  );
+}
+
+function HuggingFaceMark() {
+  // Hugging Face's official logo, from huggingface.co/front/assets.
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src="/brands/huggingface.svg" alt="" width={17} height={16} aria-hidden="true" />;
+}
+
+function Check() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M3 8.5l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -54,12 +76,14 @@ function ConnectButton({
   busy: boolean;
   onClick: () => void;
 }) {
+  const base = "inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-sm font-medium";
   if (username) {
     return (
-      <div className="flex flex-1 min-w-[200px] items-center gap-2.5 rounded-md border border-green-200 bg-green-50 px-4 py-2.5 font-medium text-accent-dark">
+      <span className={`${base} border-green-200 bg-green-50 text-accent-dark`} title={`Connected as @${username}`}>
         {icon}
-        <span className="truncate">Connected as @{username}</span>
-      </div>
+        <span className="max-w-[10rem] truncate">@{username}</span>
+        <Check />
+      </span>
     );
   }
   return (
@@ -67,10 +91,22 @@ function ConnectButton({
       type="button"
       onClick={onClick}
       disabled={busy}
-      className="flex flex-1 min-w-[200px] items-center justify-center gap-2.5 rounded-md bg-zinc-900 px-4 py-2.5 font-medium text-white transition-transform active:scale-95 hover:bg-zinc-700 disabled:cursor-progress disabled:opacity-60"
+      className={`${base} border-zinc-300 bg-white text-zinc-800 shadow-sm transition hover:border-zinc-400 hover:bg-zinc-50 active:scale-[0.98] disabled:cursor-progress disabled:opacity-60`}
     >
-      {icon}
-      {busy ? "Connecting…" : label}
+      {busy ? (
+        <span className="spinner size-3.5 rounded-full border-2 border-zinc-300 border-t-zinc-700" aria-hidden="true" />
+      ) : (
+        icon
+      )}
+      {busy ? (
+        "Connecting…"
+      ) : (
+        <span>
+          {/* On phones the panel's subtitle already says "Connect", so the buttons fit on one row. */}
+          <span className="hidden sm:inline">Connect </span>
+          {label}
+        </span>
+      )}
     </button>
   );
 }
@@ -163,26 +199,24 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
   return (
     <section
       aria-labelledby="autofill-heading"
-      className="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4 sm:p-5"
+      className="mt-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm"
     >
-      <h2 id="autofill-heading" className="font-semibold text-zinc-900">
-        ⚡ Autofill your answers
+      <h2 id="autofill-heading" className="text-sm font-semibold text-zinc-900">
+        Autofill your answers
       </h2>
-      <p className="mt-1 text-sm text-zinc-600">
-        Connect your accounts and we&apos;ll tick what we can prove, and fill in your rig.
-      </p>
+      <p className="mt-0.5 text-sm text-zinc-500">Connect an account and we&apos;ll tick what we can prove.</p>
 
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="mt-3 flex flex-wrap gap-2">
         <ConnectButton
-          label="Connect GitHub"
+          label="GitHub"
           icon={<GitHubMark />}
           username={connected.github}
           busy={busy === "github"}
           onClick={startGitHub}
         />
         <ConnectButton
-          label="Connect Hugging Face"
-          icon={<span aria-hidden="true">🤗</span>}
+          label="Hugging Face"
+          icon={<HuggingFaceMark />}
           username={connected.huggingface}
           busy={busy === "huggingface"}
           onClick={startHuggingFace}
@@ -199,11 +233,23 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
         </ul>
       )}
 
-      <p className="mt-3 text-xs text-zinc-500">
-        🔒 We only read your public profile, and we don&apos;t store anything. Your answers stay in your browser.
+      <p className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500">
+        <svg
+          viewBox="0 0 24 24"
+          width="12"
+          height="12"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <rect x="4" y="11" width="16" height="10" rx="2" />
+          <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+        </svg>
+        We only read your public profile and store nothing. Your answers stay in your browser.
       </p>
 
-      <div className="mt-6 space-y-3 border-t border-zinc-200 pt-5 text-sm">
+      <div className="mt-4 space-y-3 border-t border-zinc-100 pt-4 text-sm">
         <h3 className="font-medium text-zinc-800">Your rig</h3>
         {rig && rig.devices.length > 0 ? (
           <div className="rounded-md border border-zinc-200 p-3 space-y-2">
