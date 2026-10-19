@@ -42,3 +42,6 @@ next-env.d.ts
 
 # planning notes, not part of the project
 /PROMPT.md
+
+# local editor and agent settings
+/.claude/
