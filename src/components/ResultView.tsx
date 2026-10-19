@@ -29,13 +29,16 @@ export function ResultView({ code, score, rig }: Props) {
   const [mine, setMine] = useState<boolean | null>(null);
   const [copied, setCopied] = useState(false);
   const [shareHint, setShareHint] = useState("");
+  // Phones attach the card through the share sheet; computers copy it for pasting.
+  const [touch, setTouch] = useState(false);
   const cardRef = useRef<Blob | null>(null);
 
   useEffect(() => {
     const isMine = loadLastResult() === code;
-    // Depends on localStorage, which only exists in the browser.
+    // Both depend on browser-only state (localStorage, pointer type).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMine(isMine);
+    setTouch(window.matchMedia("(pointer: coarse)").matches);
   }, [code]);
 
   // Fetch the card once up front, so the share sheet can open straight from the click,
@@ -162,12 +165,18 @@ export function ResultView({ code, score, rig }: Props) {
               Re-quantize
             </Link>
           </div>
-          {shareHint && (
+          {shareHint ? (
             <p
               role="status"
               className="rounded-md bg-green-50 px-3 py-2 text-sm text-accent-dark ring-1 ring-green-200"
             >
               {shareHint}
+            </p>
+          ) : (
+            <p className="text-sm text-zinc-500">
+              {touch
+                ? "Share on 𝕏 opens your share sheet with your card attached."
+                : "Share on 𝕏 copies your card. Paste it into your post with ⌘V (Ctrl+V on Windows)."}
             </p>
           )}
         </div>
