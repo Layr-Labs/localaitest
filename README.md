@@ -118,4 +118,4 @@ The code is released under the [MIT License](LICENSE).
 
 The name "Local AI Purity Test", the localaitest.com domain, and the Local AI Builders branding are not covered by the license. If you fork this, please give it your own name.
 
-The bundled fonts are licensed separately under the SIL Open Font License 1.1: [Inter](assets/fonts/OFL-Inter.txt) and [Geist Mono](assets/fonts/OFL-GeistMono.txt).
+The bundled fonts are licensed separately: [Geist Mono](assets/fonts/OFL-GeistMono.txt) under the SIL Open Font License 1.1; ABC Repro Variable and Zalando Sans SemiExpanded under their respective commercial licenses.

@@ -43,23 +43,23 @@ export function AskAssistant({ rigGb }: { rigGb: number | null }) {
       <button
         type="button"
         onClick={open}
-        className="fixed bottom-4 right-4 z-30 rounded-full bg-accent px-4 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="fixed bottom-4 right-4 z-30 rounded-full bg-accent px-4 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent light:shadow-black/20"
       >
         Ask an AI Assistant ✨
       </button>
       <dialog
         ref={dialogRef}
         aria-labelledby="ask-title"
-        className="m-auto w-[min(92vw,620px)] rounded-xl bg-term p-0 text-zinc-200 shadow-2xl"
+        className="m-auto w-[min(92vw,620px)] rounded-xl bg-term p-0 text-white shadow-2xl"
         onClick={(e) => e.target === dialogRef.current && dialogRef.current?.close()}
       >
-        <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2 font-mono text-xs text-zinc-500">
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-2 font-mono text-xs text-white/40">
           <span>~/models — llama-cli</span>
           <button
             type="button"
             onClick={() => dialogRef.current?.close()}
             aria-label="Close"
-            className="rounded px-2 py-1 text-zinc-400 hover:bg-zinc-800 hover:text-white"
+            className="rounded px-2 py-1 text-white/40 hover:bg-white/10 hover:text-white"
           >
             ✕
           </button>
@@ -70,7 +70,7 @@ export function AskAssistant({ rigGb }: { rigGb: number | null }) {
               <h2 id="ask-title" className="text-2xl font-bold text-white">
                 Bruh.
               </h2>
-              <p className="mt-3 text-lg text-zinc-300">Not your weights, not your answers.</p>
+              <p className="mt-3 text-lg text-white/70">Not your weights, not your answers.</p>
             </div>
           ) : (
             <>
@@ -87,7 +87,7 @@ export function AskAssistant({ rigGb }: { rigGb: number | null }) {
                   <h2 id="ask-title" className="text-2xl font-bold text-white">
                     Bruh.
                   </h2>
-                  <p className="mt-2 text-lg text-zinc-300">
+                  <p className="mt-2 text-lg text-white/70">
                     {rigGb === null
                       ? "You don't have the VRAM for this."
                       : `You have ${haveGb.toFixed(0)}GB. This needs ${needGb.toFixed(0)}GB. Go buy another 3090.`}
@@ -95,7 +95,7 @@ export function AskAssistant({ rigGb }: { rigGb: number | null }) {
                   <button
                     type="button"
                     onClick={() => setCloud(true)}
-                    className="mt-5 rounded-md border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:border-zinc-500 hover:text-white"
+                    className="mt-5 rounded-md border border-white/20 px-3 py-2 text-sm text-white/60 hover:border-white/40 hover:text-white"
                   >
                     Ask ChatGPT instead
                   </button>

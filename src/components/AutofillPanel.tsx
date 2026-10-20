@@ -27,7 +27,18 @@ type Props = {
 type Status = { tone: "ok" | "error"; text: string };
 
 const inputClass =
-  "w-full min-w-0 rounded-md border border-zinc-300 bg-white px-2.5 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
+  "w-full min-w-0 h-10 rounded-md border border-white/20 light:border-black/20 bg-white/10 light:bg-black/5 px-3 text-sm text-white light:text-black focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
+const selectClass = `${inputClass} appearance-none pr-10`;
+
+function Chevron() {
+  return (
+    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-white/40 light:text-black/40" aria-hidden="true">
+      <svg viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M1 1l4 4 4-4" />
+      </svg>
+    </span>
+  );
+}
 
 function ticked(n: number): string {
   return n === 1 ? "ticked 1 item" : `ticked ${n} items`;
@@ -79,7 +90,7 @@ function ConnectButton({
   const base = "inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-sm font-medium";
   if (username) {
     return (
-      <span className={`${base} border-green-200 bg-green-50 text-accent-dark`} title={`Connected as @${username}`}>
+      <span className={`${base} border-accent/40 bg-accent/10 text-accent light:text-accent`} title={`Connected as @${username}`}>
         {icon}
         <span className="max-w-[10rem] truncate">@{username}</span>
         <Check />
@@ -91,10 +102,10 @@ function ConnectButton({
       type="button"
       onClick={onClick}
       disabled={busy}
-      className={`${base} border-zinc-300 bg-white text-zinc-800 shadow-sm transition hover:border-zinc-400 hover:bg-zinc-50 active:scale-[0.98] disabled:cursor-progress disabled:opacity-60`}
+      className={`${base} border-white/20 light:border-black/20 bg-white/5 light:bg-black/5 text-white light:text-black transition hover:border-white/40 light:hover:border-black/40 hover:bg-white/10 light:hover:bg-black/5 active:scale-[0.98] disabled:cursor-progress disabled:opacity-60`}
     >
       {busy ? (
-        <span className="spinner size-3.5 rounded-full border-2 border-zinc-300 border-t-zinc-700" aria-hidden="true" />
+        <span className="spinner size-3.5 rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
       ) : (
         icon
       )}
@@ -199,12 +210,12 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
   return (
     <section
       aria-labelledby="autofill-heading"
-      className="mt-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm"
+      className="mt-6 rounded-xl border border-white/10 light:border-black/10 bg-white/5 light:bg-black/5 p-4"
     >
-      <h2 id="autofill-heading" className="text-sm font-semibold text-zinc-900">
+      <h2 id="autofill-heading" className="text-sm font-semibold text-white light:text-black">
         Autofill your answers
       </h2>
-      <p className="mt-0.5 text-sm text-zinc-500">Connect an account and we&apos;ll tick what we can prove.</p>
+      <p className="mt-0.5 text-sm text-white/50 light:text-black/50">Connect an account and we&apos;ll tick what we can prove.</p>
 
       <div className="mt-3 flex flex-wrap gap-2">
         <ConnectButton
@@ -226,14 +237,14 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
       {statuses.length > 0 && (
         <ul className="mt-3 space-y-1 text-sm" aria-live="polite">
           {statuses.map((s, i) => (
-            <li key={i} className={s.tone === "error" ? "text-red-600" : "text-accent-dark"}>
+            <li key={i} className={s.tone === "error" ? "text-red-400" : "text-accent"}>
               {s.text}
             </li>
           ))}
         </ul>
       )}
 
-      <p className="mt-3 flex items-center gap-1.5 text-xs text-zinc-500">
+      <p className="mt-3 flex items-center gap-1.5 text-xs text-white/50 light:text-black/50">
         <svg
           viewBox="0 0 24 24"
           width="12"
@@ -249,10 +260,10 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
         We only read your public profile and store nothing. Your answers stay in your browser.
       </p>
 
-      <div className="mt-4 space-y-3 border-t border-zinc-100 pt-4 text-sm">
-        <h3 className="font-medium text-zinc-800">Your rig</h3>
+      <div className="mt-4 space-y-3 border-t border-white/10 light:border-black/10 pt-4 text-sm">
+        <h3 className="font-medium text-white light:text-black">Your rig</h3>
         {rig && rig.devices.length > 0 ? (
-          <div className="rounded-md border border-zinc-200 p-3 space-y-2">
+          <div className="rounded-md border border-white/10 light:border-black/10 p-3 space-y-2">
             <ul className="space-y-1 font-mono text-xs">
               {rig.devices.map((d, i) => (
                 <li key={i} className="flex items-center justify-between gap-2">
@@ -262,7 +273,7 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
                   <button
                     type="button"
                     onClick={() => removeDevice(i)}
-                    className="text-zinc-400 hover:text-red-600"
+                    className="text-white/40 light:text-black/40 hover:text-red-400"
                     aria-label={`Remove ${d.name}`}
                   >
                     remove
@@ -271,48 +282,54 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
               ))}
             </ul>
             <p className="font-mono text-sm">
-              Total {total}GB → <strong className="text-accent-dark">{RIG_CLASSES[rigClassFor(total)].label}</strong>
+              Total {total}GB → <strong className="text-accent">{RIG_CLASSES[rigClassFor(total)].label}</strong>
             </p>
-            <button type="button" onClick={() => onRigChange(null)} className="text-xs text-zinc-500 underline">
+            <button type="button" onClick={() => onRigChange(null)} className="text-xs text-white/50 light:text-black/50 underline">
               Clear rig
             </button>
           </div>
         ) : (
-          <p className="text-zinc-500">No rig yet. Connect Hugging Face to fill it in, or pick it by hand.</p>
+          <p className="text-white/50 light:text-black/50">No rig yet. Connect Hugging Face to fill it in, or pick it by hand.</p>
         )}
 
         <div className="flex flex-wrap items-end gap-2">
-          <label className="flex-1 min-w-[150px]">
-            <span className="mb-1 block text-xs text-zinc-600">Device</span>
-            <select className={inputClass} value={deviceIndex} onChange={(e) => chooseDevice(Number(e.target.value))}>
-              {DEVICE_GROUPS.map((group) => (
-                <optgroup key={group} label={group}>
-                  {DEVICE_OPTIONS.map((o, i) =>
-                    o.group === group ? (
-                      <option key={o.name} value={i}>
-                        {o.name}
-                        {o.memOptions ? "" : ` (${o.mem}GB)`}
-                      </option>
-                    ) : null,
-                  )}
-                </optgroup>
-              ))}
-            </select>
+          <label className="flex-1 min-w-[150px] max-w-xs">
+            <span className="mb-1 block text-xs text-white/60 light:text-black/60">Device</span>
+            <div className="relative">
+              <select className={selectClass} value={deviceIndex} onChange={(e) => chooseDevice(Number(e.target.value))}>
+                {DEVICE_GROUPS.map((group) => (
+                  <optgroup key={group} label={group}>
+                    {DEVICE_OPTIONS.map((o, i) =>
+                      o.group === group ? (
+                        <option key={o.name} value={i}>
+                          {o.name}
+                          {o.memOptions ? "" : ` (${o.mem}GB)`}
+                        </option>
+                      ) : null,
+                    )}
+                  </optgroup>
+                ))}
+              </select>
+              <Chevron />
+            </div>
           </label>
           {option.memOptions && (
             <label className="w-24">
-              <span className="mb-1 block text-xs text-zinc-600">Memory</span>
-              <select className={inputClass} value={mem} onChange={(e) => setMem(Number(e.target.value))}>
-                {option.memOptions.map((m) => (
-                  <option key={m} value={m}>
-                    {m}GB
-                  </option>
-                ))}
-              </select>
+              <span className="mb-1 block text-xs text-white/60 light:text-black/60">Memory</span>
+              <div className="relative">
+                <select className={selectClass} value={mem} onChange={(e) => setMem(Number(e.target.value))}>
+                  {option.memOptions.map((m) => (
+                    <option key={m} value={m}>
+                      {m}GB
+                    </option>
+                  ))}
+                </select>
+                <Chevron />
+              </div>
             </label>
           )}
           <label className="w-16">
-            <span className="mb-1 block text-xs text-zinc-600">How many</span>
+            <span className="mb-1 block text-xs text-white/60 light:text-black/60">How many</span>
             <input
               type="number"
               min={1}
@@ -325,7 +342,7 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
           <button
             type="button"
             onClick={addDevice}
-            className="rounded-md border border-zinc-300 px-3 py-2 font-medium hover:border-zinc-500"
+            className="rounded-md border border-white/20 light:border-black/20 px-3 py-2 font-medium text-white light:text-black hover:border-white/50 light:hover:border-black/40"
           >
             Add
           </button>

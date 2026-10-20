@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ITEMS, type DetectRule } from "@/data/items";
 import { hardwareMatches, totalMemory, type Rig } from "@/lib/rig";
-import { formatCode, rigClassFor } from "@/lib/score";
+import { RIG_CLASSES, formatCode, rigClassFor } from "@/lib/score";
 import {
   clearState,
   EMPTY_STATE,
@@ -16,11 +16,14 @@ import {
 } from "@/lib/storage";
 import { AskAssistant } from "./AskAssistant";
 import { AutofillPanel } from "./AutofillPanel";
+import { Footer } from "./Footer";
 import { Joke } from "./Joke";
 import { ScoreLoading } from "./ScoreLoading";
 import { StatusBar } from "./StatusBar";
 
 const SECRET = "gguf when";
+const VRAM_ITEMS_TO_FILL = 40;
+const VRAM_DEFAULT_GB = 24;
 
 export function Checklist() {
   const router = useRouter();
@@ -141,90 +144,162 @@ export function Checklist() {
     router.push(`/r/${code}`);
   }
 
+  const checkedCount = state.checked.length;
+  const vramCapacity = rigGb !== null ? rigGb : VRAM_DEFAULT_GB;
+  const vramUsed = (checkedCount * vramCapacity) / VRAM_ITEMS_TO_FILL;
+  const vramOverflow = vramUsed > vramCapacity;
+  const vramFill = Math.min(vramUsed / vramCapacity, 1) * 100;
+  const vramGb = (n: number) => (n >= 100 ? n.toFixed(0) : n.toFixed(1));
+  const vramLabel = state.rig && state.rig.devices.length ? RIG_CLASSES[rigClassFor(vramCapacity)].label : null;
+
+  const calcButton = (extraClass = "") => (
+    <button
+      type="button"
+      onClick={calculate}
+      onPointerEnter={prefetchResult}
+      onFocus={prefetchResult}
+      onTouchStart={prefetchResult}
+      aria-busy={calculating !== "idle"}
+      className={`inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-white shadow transition-transform duration-100 active:scale-95 ${extraClass} ${
+        calculating === "idle" ? "bg-accent hover:bg-accent-dark" : "cursor-progress bg-accent-dark"
+      }`}
+    >
+      {calculating !== "idle" && (
+        <span className="spinner size-3.5 rounded-full border-2 border-white/35 border-t-white" aria-hidden="true" />
+      )}
+      {calculating === "idle" ? "Calculate My Score" : "Quantizing…"}
+    </button>
+  );
+
   return (
     <>
-      <StatusBar checked={state.checked.length} rig={state.rig} />
-      <main className="mx-auto w-full max-w-[720px] px-4 pt-8">
-        <h1 className="text-4xl font-bold tracking-tight text-accent sm:text-5xl text-balance">
-          The Local AI Purity Test
-        </h1>
-        <p className="mt-3 text-zinc-700">
-          The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
-        </p>
-        <p className="mt-2 font-semibold text-zinc-900">
-          Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
-        </p>
+      {/* Sticky status bar: mobile only */}
+      <div className="md:hidden">
+        <StatusBar checked={checkedCount} rig={state.rig} />
+      </div>
 
-        <AutofillPanel
-          rig={state.rig}
-          connected={state.connected}
-          onDetected={applyRules}
-          onRigChange={changeRig}
-          onConnected={markConnected}
-        />
+      <main className="flex-1 w-full">
+        <div className="mx-auto w-full max-w-[1400px] px-6 md:px-10 lg:px-16 md:grid md:grid-cols-[280px_1fr] md:gap-14 lg:grid-cols-[320px_1fr] lg:gap-16 xl:grid-cols-[360px_1fr] xl:gap-20 md:items-start">
 
-        <ul className="mt-8">
-          {ITEMS.map((item) => {
-            const isChecked = checkedSet.has(item.id);
-            const source = isChecked ? state.detected[item.id] : undefined;
-            return (
-              <li key={item.id} className="group">
-                <label className="flex cursor-pointer items-start gap-3 rounded-md px-2 py-2.5 hover:bg-zinc-50">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={() => toggle(item.id)}
-                    className="mt-1 size-4 shrink-0 accent-accent"
-                  />
-                  <span className="min-w-0">
-                    <span className={isChecked ? "text-zinc-900" : "text-zinc-800"}>
-                      {item.id}. {item.text}
-                    </span>
-                    {source && (
-                      <span className="ml-2 inline-block rounded-full bg-green-50 px-2 py-0.5 align-middle text-[11px] font-medium text-accent-dark ring-1 ring-green-200">
-                        detected via {source}
+          {/* Left rail: desktop / tablet only */}
+          <aside className="hidden md:flex md:flex-col md:sticky md:top-0 md:h-screen md:overflow-y-auto md:pt-10 md:pb-6">
+            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-headline font-bold tracking-tight text-accent text-balance leading-tight">
+              The Local AI <span className="text-white light:text-black">Purity Test</span>
+            </h1>
+
+            {/* VRAM readout */}
+            <div className="mt-4 font-mono text-xs">
+              <div className="flex justify-between gap-2 mb-1.5">
+                <span className={vramOverflow ? "text-red-400" : "text-accent"}>
+                  VRAM {vramGb(vramUsed)} / {vramGb(vramCapacity)} GB
+                </span>
+                <span className={`truncate ${vramOverflow ? "text-red-400" : "text-white/40 light:text-black/40"}`}>
+                  {vramOverflow ? "offloading…" : (vramLabel ?? "24 GB card")}
+                </span>
+              </div>
+              <div className="h-1.5 rounded-sm bg-white/10 light:bg-black/10 overflow-hidden">
+                <div
+                  className={`h-full transition-all duration-300 ${vramOverflow ? "bg-red-500" : "bg-accent"}`}
+                  style={{ width: `${vramFill}%` }}
+                />
+              </div>
+            </div>
+
+            <p className="mt-6 text-sm text-white/70 light:text-black/70">
+              The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
+            </p>
+            <p className="mt-2 text-sm font-semibold text-white light:text-black">
+              Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
+            </p>
+
+            <div className="mt-auto pt-8 flex gap-3">
+              {calcButton("flex-1")}
+              <button
+                type="button"
+                onClick={reset}
+                className="inline-flex items-center justify-center rounded-md border border-white/25 light:border-black/25 px-4 py-2.5 text-sm font-semibold text-white/70 light:text-black/70 hover:border-white/50 light:hover:border-black/50 hover:text-white light:hover:text-black transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </aside>
+
+          {/* Right column */}
+          <div className="pt-8 md:pt-10 md:pb-10">
+            {/* Mobile header */}
+            <div className="md:hidden">
+              <h1 className="text-4xl font-headline font-bold tracking-tight text-accent sm:text-5xl text-balance">
+                The Local AI <span className="text-white light:text-black">Purity Test</span>
+              </h1>
+              <p className="mt-3 text-sm text-white/70 light:text-black/70">
+                The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
+              </p>
+              <p className="mt-2 text-sm font-semibold text-white light:text-black">
+                Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
+              </p>
+            </div>
+
+            <AutofillPanel
+              rig={state.rig}
+              connected={state.connected}
+              onDetected={applyRules}
+              onRigChange={changeRig}
+              onConnected={markConnected}
+            />
+
+            <ul className="mt-8">
+              {ITEMS.map((item) => {
+                const isChecked = checkedSet.has(item.id);
+                const source = isChecked ? state.detected[item.id] : undefined;
+                return (
+                  <li key={item.id} className="group">
+                    <label className="flex cursor-pointer items-start gap-3 rounded-md px-2 py-2.5 hover:bg-white/5 light:hover:bg-black/5">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggle(item.id)}
+                        className="mt-1 size-4 shrink-0 accent-accent"
+                      />
+                      <span className="min-w-0">
+                        <span className={`text-sm ${isChecked ? "text-white light:text-black" : "text-white/80 light:text-black/80"}`}>
+                          {item.id}. {item.text}
+                        </span>
+                        {source && (
+                          <span className="ml-2 inline-block rounded-full bg-accent/10 px-2 py-0.5 align-middle text-[11px] font-medium text-accent ring-1 ring-accent/30">
+                            detected via {source}
+                          </span>
+                        )}
+                        {item.joke && (
+                          <span
+                            className={`mt-1 text-sm text-white/50 light:text-black/50 italic ${
+                              isChecked ? "block" : "hidden group-hover:block group-focus-within:block"
+                            }`}
+                          >
+                            <Joke joke={item.joke} />
+                          </span>
+                        )}
                       </span>
-                    )}
-                    {item.joke && (
-                      <span
-                        className={`mt-1 text-sm text-zinc-500 italic ${
-                          isChecked ? "block" : "hidden group-hover:block group-focus-within:block"
-                        }`}
-                      >
-                        <Joke joke={item.joke} />
-                      </span>
-                    )}
-                  </span>
-                </label>
-              </li>
-            );
-          })}
-        </ul>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-          <button
-            type="button"
-            onClick={calculate}
-            onPointerEnter={prefetchResult}
-            onFocus={prefetchResult}
-            onTouchStart={prefetchResult}
-            aria-busy={calculating !== "idle"}
-            className={`inline-flex items-center gap-2.5 rounded-md px-6 py-3 text-lg font-semibold text-white shadow transition-transform duration-100 active:scale-95 ${
-              calculating === "idle" ? "bg-accent hover:bg-accent-dark" : "cursor-progress bg-accent-dark"
-            }`}
-          >
-            {calculating !== "idle" && (
-              <span
-                className="spinner size-4 rounded-full border-2 border-white/35 border-t-white"
-                aria-hidden="true"
-              />
-            )}
-            {calculating === "idle" ? "Calculate My Score" : "Quantizing…"}
-          </button>
-          <span className="font-mono text-sm text-zinc-600">{state.checked.length} checked</span>
-          <button type="button" onClick={reset} className="ml-auto text-sm text-zinc-500 underline hover:text-zinc-800">
-            Reset
-          </button>
+            {/* Mobile CTA */}
+            <div className="mt-10 flex flex-wrap items-center gap-4 md:hidden">
+              {calcButton("")}
+              <span className="font-mono text-sm text-white/50 light:text-black/50">{checkedCount} checked</span>
+              <button
+                type="button"
+                onClick={reset}
+                className="ml-auto text-sm text-white/50 light:text-black/50 underline hover:text-white light:hover:text-black"
+              >
+                Reset
+              </button>
+            </div>
+
+            <Footer fullWidth />
+          </div>
         </div>
       </main>
 

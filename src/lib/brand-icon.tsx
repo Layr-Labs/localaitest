@@ -1,20 +1,16 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-// Same green as the site's accent color.
-const GREEN = "#16a34a";
+const BG = "#0b44ff";
 const TEXT = "#ffffff";
 const LINES = ["Local", "AI", "Test"];
 
 export async function brandIconFonts() {
   const dir = join(process.cwd(), "assets/fonts");
-  const [bold, black] = await Promise.all([
-    readFile(join(dir, "Inter-Bold.ttf")),
-    readFile(join(dir, "Inter-Black.ttf")),
-  ]);
+  const repro = await readFile(join(dir, "ABCReproVariable.ttf"));
   return [
-    { name: "Inter", data: bold, weight: 700 as const, style: "normal" as const },
-    { name: "Inter", data: black, weight: 900 as const, style: "normal" as const },
+    { name: "ABC Repro", data: repro, weight: 700 as const, style: "normal" as const },
+    { name: "ABC Repro", data: repro, weight: 900 as const, style: "normal" as const },
   ];
 }
 
@@ -38,10 +34,10 @@ export function BrandIcon({ size, rounded = true }: { size: number; rounded?: bo
         justifyContent: "center",
         paddingLeft: size * (small ? 0.075 : 0.1),
         paddingBottom: size * 0.02,
-        background: GREEN,
+        background: BG,
         borderRadius: rounded ? size * 0.22 : 0,
         color: TEXT,
-        fontFamily: "Inter",
+        fontFamily: "ABC Repro",
         fontWeight: small ? 900 : 700,
         fontSize: size * (small ? 0.305 : 0.27),
         lineHeight: small ? 0.84 : 0.95,

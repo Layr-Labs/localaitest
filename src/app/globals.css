@@ -1,18 +1,36 @@
 @import "tailwindcss";
 
+/* Class-based light mode: add .light to <html> to switch. Default = dark. */
+@variant light (&:where(.light, .light *));
+
 @theme inline {
-  /* San Francisco on Apple devices, Helvetica Neue / Helvetica elsewhere. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-repro), sans-serif;
+  --font-headline: var(--font-zalando-se), sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-  --color-accent: #16a34a;
-  --color-accent-dark: #15803d;
-  --color-term: #0b0f0c;
-  --color-term-green: #4ade80;
+  --color-accent: #0b44ff;
+  --color-accent-dark: #3766ff;
+  --color-term: #000000;
+  --color-term-green: #8fa9ff;
+  --color-elec-blue: #0b44ff;
+  --color-sig-blue: #3766ff;
+  --color-mist-blue: #8fa9ff;
+  --color-outline-blue: rgba(53, 99, 255, 0.47);
 }
 
+/* Default = dark */
 body {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Light mode overrides */
+html.light body {
   background: #ffffff;
-  color: #18181b;
+  color: #000000;
+}
+
+html.light dialog::backdrop {
+  background: rgb(0 0 0 / 0.35);
 }
 
 /* Fan in the status bar. Speed is set inline from how many items are checked. */

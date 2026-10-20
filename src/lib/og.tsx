@@ -12,17 +12,20 @@ const WREATH = 540;
 
 export async function ogFonts() {
   const dir = join(process.cwd(), "assets/fonts");
-  const [regular, bold, inter, interRegular] = await Promise.all([
+  const [monoRegular, monoBold, repro, zalandoSE] = await Promise.all([
     readFile(join(dir, "GeistMono-Regular.ttf")),
     readFile(join(dir, "GeistMono-Bold.ttf")),
-    readFile(join(dir, "Inter-Bold.ttf")),
-    readFile(join(dir, "Inter-Regular.ttf")),
+    readFile(join(dir, "ABCReproVariable.ttf")),
+    readFile(join(dir, "ZalandoSansSemiExpanded-VariableFont_wght.ttf")),
   ]);
   return [
-    { name: "Geist Mono", data: regular, weight: 400 as const, style: "normal" as const },
-    { name: "Geist Mono", data: bold, weight: 700 as const, style: "normal" as const },
-    { name: "Inter", data: inter, weight: 700 as const, style: "normal" as const },
-    { name: "Inter", data: interRegular, weight: 400 as const, style: "normal" as const },
+    { name: "Geist Mono", data: monoRegular, weight: 400 as const, style: "normal" as const },
+    { name: "Geist Mono", data: monoBold, weight: 700 as const, style: "normal" as const },
+    { name: "ABC Repro", data: repro, weight: 400 as const, style: "normal" as const },
+    { name: "ABC Repro", data: repro, weight: 700 as const, style: "normal" as const },
+    { name: "Zalando SE", data: zalandoSE, weight: 400 as const, style: "normal" as const },
+    { name: "Zalando SE", data: zalandoSE, weight: 700 as const, style: "normal" as const },
+    { name: "Zalando SE", data: zalandoSE, weight: 900 as const, style: "normal" as const },
   ];
 }
 
@@ -69,7 +72,7 @@ function WreathCard({
         padding: "0 56px",
         background: bg,
         color: ink,
-        fontFamily: "Inter",
+        fontFamily: "ABC Repro",
         fontWeight: 700,
       }}
     >
@@ -150,6 +153,8 @@ function Headline({ text, size, color, square }: { text: string; size: number; c
       style={{
         display: "flex",
         alignItems: "flex-end",
+        fontFamily: "Zalando SE",
+        fontWeight: 700,
         fontSize: size,
         lineHeight: 1,
         letterSpacing: -4,
