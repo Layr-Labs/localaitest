@@ -15,7 +15,6 @@ import {
 } from "@/lib/score";
 import { resultUrl } from "@/lib/site";
 import { loadLastResult } from "@/lib/storage";
-import { TierLadder } from "./TierLadder";
 
 type Props = { code: string; score: number; rig: RigClass | null };
 
@@ -182,12 +181,6 @@ export function ResultView({ code, score, rig }: Props) {
         </div>
       )}
 
-      <section aria-labelledby="tiers-heading" className="mt-10 rounded-lg border border-zinc-200 p-4 sm:p-5">
-        <h2 id="tiers-heading" className="mb-3 text-sm font-semibold text-zinc-900">
-          Scoring reference
-        </h2>
-        <TierLadder score={score} />
-      </section>
     </main>
   );
 }
