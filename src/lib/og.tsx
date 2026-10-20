@@ -10,22 +10,23 @@ const INK = "#0a0a0a";
 const SITE_GREEN = "#16a34a";
 const WREATH = 540;
 
+// The image renderer (next/og) can't read variable fonts, so images use fixed-weight copies of
+// Zalando Sans SemiExpanded, renamed "LAT Sans SemiExpanded" as its open font license requires.
 export async function ogFonts() {
   const dir = join(process.cwd(), "assets/fonts");
-  const [monoRegular, monoBold, repro, zalandoSE] = await Promise.all([
+  const [monoRegular, monoBold, regular, bold, black] = await Promise.all([
     readFile(join(dir, "GeistMono-Regular.ttf")),
     readFile(join(dir, "GeistMono-Bold.ttf")),
-    readFile(join(dir, "ABCReproVariable.ttf")),
-    readFile(join(dir, "ZalandoSansSemiExpanded-VariableFont_wght.ttf")),
+    readFile(join(dir, "LATSansSemiExpanded-Regular.ttf")),
+    readFile(join(dir, "LATSansSemiExpanded-Bold.ttf")),
+    readFile(join(dir, "LATSansSemiExpanded-Black.ttf")),
   ]);
   return [
     { name: "Geist Mono", data: monoRegular, weight: 400 as const, style: "normal" as const },
     { name: "Geist Mono", data: monoBold, weight: 700 as const, style: "normal" as const },
-    { name: "ABC Repro", data: repro, weight: 400 as const, style: "normal" as const },
-    { name: "ABC Repro", data: repro, weight: 700 as const, style: "normal" as const },
-    { name: "Zalando SE", data: zalandoSE, weight: 400 as const, style: "normal" as const },
-    { name: "Zalando SE", data: zalandoSE, weight: 700 as const, style: "normal" as const },
-    { name: "Zalando SE", data: zalandoSE, weight: 900 as const, style: "normal" as const },
+    { name: "LAT Sans", data: regular, weight: 400 as const, style: "normal" as const },
+    { name: "LAT Sans", data: bold, weight: 700 as const, style: "normal" as const },
+    { name: "LAT Sans", data: black, weight: 900 as const, style: "normal" as const },
   ];
 }
 
@@ -72,7 +73,7 @@ function WreathCard({
         padding: "0 56px",
         background: bg,
         color: ink,
-        fontFamily: "ABC Repro",
+        fontFamily: "LAT Sans",
         fontWeight: 700,
       }}
     >
@@ -153,7 +154,7 @@ function Headline({ text, size, color, square }: { text: string; size: number; c
       style={{
         display: "flex",
         alignItems: "flex-end",
-        fontFamily: "Zalando SE",
+        fontFamily: "LAT Sans",
         fontWeight: 700,
         fontSize: size,
         lineHeight: 1,
