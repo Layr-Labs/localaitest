@@ -63,7 +63,7 @@ export function StatusBar({ checked, rig }: { checked: number; rig: Rig | null }
   return (
     <div className="sticky top-0 z-20 bg-term text-white/70 font-mono text-xs sm:text-sm shadow-md">
       {/* Right padding keeps the GPU temperature clear of the theme toggle fixed in the corner. */}
-      <div className="mx-auto max-w-[720px] pl-4 pr-[88px] py-2 flex items-center gap-3">
+      <div className="mx-auto max-w-[720px] pl-4 pr-14 py-2 flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap justify-between gap-x-3 mb-1">
             <span className={`whitespace-nowrap ${overflow ? "text-red-400" : "text-white"}`}>
