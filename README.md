@@ -1,12 +1,12 @@
 <img src="docs/local-ai-test-logo.png" alt="Local AI Test logo" width="96" height="96" />
 
-# The Local AI Test
+# The Local AI Purity Test
 
 A test for people who run open-weight models. Tick everything you've done and your score earns you a rank from Curious to Legend.
 
 **Take it at [localaitest.com](https://localaitest.com)**
 
-![The Local AI Test: How local are you?](docs/home-card.png)
+![The Local AI Purity Test: How local are you?](docs/home-card.png)
 
 ## How it works
 
@@ -125,7 +125,7 @@ Inspired by the work of [Tyler](https://x.com/tyler_fong_) and [Sarah](https://x
 
 The code is released under the [MIT License](LICENSE).
 
-The "Local AI Test" name, the localaitest.com domain, the logo and the rank card artwork in `public/cards` are not covered by the license. If you fork this, please give it your own name and look.
+The "Local AI Purity Test" name, the localaitest.com domain, the logo and the rank card artwork in `public/cards` are not covered by the license. If you fork this, please give it your own name and look.
 
 The fonts are licensed separately:
 

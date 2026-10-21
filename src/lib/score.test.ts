@@ -69,10 +69,10 @@ test("rank phrases use the right article", () => {
 });
 
 test("share text", () => {
-  assert.equal(shareText(66), "I'm a Quantizer on the Local AI Test: 66/100.");
-  assert.equal(shareText(3), "I'm Curious on the Local AI Test: 3/100.");
-  assert.equal(shareText(12), "I'm an Enthusiast on the Local AI Test: 12/100.");
-  assert.equal(shareText(100), "I've unlocked God Mode on the Local AI Test: 100/100.");
+  assert.equal(shareText(66), "I'm a Quantizer on the Local AI Purity Test: 66/100.");
+  assert.equal(shareText(3), "I'm Curious on the Local AI Purity Test: 3/100.");
+  assert.equal(shareText(12), "I'm an Enthusiast on the Local AI Purity Test: 12/100.");
+  assert.equal(shareText(100), "I've unlocked God Mode on the Local AI Purity Test: 100/100.");
   assert.equal(theyAre(tierFor(100)), "Your friend has unlocked God Mode");
   assert.equal(theyAre(tierFor(66)), "Your friend is a Quantizer");
 });

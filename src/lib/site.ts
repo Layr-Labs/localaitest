@@ -1,4 +1,4 @@
-export const SITE_NAME = "The Local AI Test";
+export const SITE_NAME = "The Local AI Purity Test";
 export const SITE_DOMAIN = "localaitest.com";
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? `https://${SITE_DOMAIN}`).replace(/\/$/, "");
 export const SITE_DESCRIPTION = "The official test for people who run open-weight models. How quantized are you?";
