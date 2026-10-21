@@ -8,7 +8,7 @@ export type Tier = {
   min: number;
   max: number;
   rank: string;
-  /** Article for "You're ___": "an Explorer", "a Builder", or none for "Curious". */
+  /** Article for "You're ___": "an Enthusiast", "a Builder", or none for "Curious". */
   article: "" | "a" | "an";
   level: number;
   roast: string;
@@ -20,11 +20,11 @@ export type Tier = {
 // secret God Mode for a perfect 100.
 export const TIERS: Tier[] = [
   { min: 0, max: 5, rank: "Curious", article: "", level: 1, roast: "You think a GGUF is a Pokémon and your GPU is for spreadsheets. Welcome to the rabbit hole." },
-  { min: 6, max: 15, rank: "Explorer", article: "an", level: 2, roast: "You installed Ollama once, ran one model, said \"huh, cool,\" and went right back to ChatGPT." },
-  { min: 16, max: 30, rank: "Tinkerer", article: "a", level: 3, roast: "You have exactly one model on your laptop, and you bring it up at every dinner party." },
-  { min: 31, max: 45, rank: "Regular", article: "a", level: 4, roast: "Your Hugging Face tab hasn't been closed in months, and 80% of your disk is models you'll never run." },
-  { min: 46, max: 60, rank: "Enthusiast", article: "an", level: 5, roast: "You say \"tokens per second\" in normal conversation. Your friends have started nodding without listening." },
-  { min: 61, max: 75, rank: "Builder", article: "a", level: 6, roast: "Your rig has a name, its own circuit breaker, and more RAM than your first three laptops combined." },
+  { min: 6, max: 15, rank: "Enthusiast", article: "an", level: 2, roast: "You say \"tokens per second\" in normal conversation. Your friends have started nodding without listening." },
+  { min: 16, max: 30, rank: "Explorer", article: "an", level: 3, roast: "You have exactly one model on your laptop and you bring it up at every dinner party." },
+  { min: 31, max: 45, rank: "Regular", article: "a", level: 4, roast: "Your Hugging Face tab hasn't been closed in months and 80% of your disk is models you'll never run." },
+  { min: 46, max: 60, rank: "Builder", article: "a", level: 5, roast: "Your rig has a name, its own circuit breaker and more RAM than your first three laptops combined." },
+  { min: 61, max: 75, rank: "Quantizer", article: "a", level: 6, roast: "You'll argue Q4_K_M vs Q5_K_S for an hour, then run Q3 because it's the only one that fits." },
   { min: 76, max: 90, rank: "Power User", article: "a", level: 7, roast: "You've rebuilt llama.cpp more times than you've called your mom this year." },
   { min: 91, max: 99, rank: "Legend", article: "a", level: 8, roast: "You are the weights now. Please go outside. The sun is free compute." },
   { min: 100, max: 100, rank: "God Mode", article: "", level: 9, roast: "You don't run local models. You ARE r/LocalLLaMA.", you: "You've unlocked God Mode" },

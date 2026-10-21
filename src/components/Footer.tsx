@@ -48,7 +48,7 @@ export function Footer({ fullWidth = false }: { fullWidth?: boolean }) {
               There are no accounts, no analytics and no tracking.
             </p>
             <p>
-              Autofill is optional. Connecting GitHub or Hugging Face only reads your public profile, and we don&apos;t store
+              Autofill is optional. Connecting GitHub or Hugging Face only reads your public profile and we don&apos;t store
               anything. Share links carry only your score and rig class.
             </p>
           </div>
@@ -66,7 +66,7 @@ export function Footer({ fullWidth = false }: { fullWidth?: boolean }) {
           Inspired by the work of{" "}
           <ExternalLink href={INSPIRED_BY.people[0].url}>{INSPIRED_BY.people[0].name}</ExternalLink> and{" "}
           <ExternalLink href={INSPIRED_BY.people[1].url}>{INSPIRED_BY.people[1].name}</ExternalLink> on{" "}
-          <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink>, and the original{" "}
+          <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink> and the original{" "}
           <ExternalLink href={INSPIRED_BY.original.url}>{INSPIRED_BY.original.name}</ExternalLink>.
         </p>
       </div>

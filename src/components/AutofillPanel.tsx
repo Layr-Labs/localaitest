@@ -289,7 +289,7 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
             </button>
           </div>
         ) : (
-          <p className="text-white/50 light:text-black/50">No rig yet. Connect Hugging Face to fill it in, or pick it by hand.</p>
+          <p className="text-white/50 light:text-black/50">No rig yet. Connect Hugging Face to fill it in or pick it by hand.</p>
         )}
 
         <div className="flex flex-wrap items-end gap-2">

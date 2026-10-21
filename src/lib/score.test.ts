@@ -4,8 +4,8 @@ import { allCodes, formatCode, parseCode, rigClassFor, roastFor, shareText, they
 
 test("tier boundaries", () => {
   const expected: [number, string][] = [
-    [0, "Curious"], [5, "Curious"], [6, "Explorer"], [15, "Explorer"], [16, "Tinkerer"], [30, "Tinkerer"],
-    [31, "Regular"], [45, "Regular"], [46, "Enthusiast"], [60, "Enthusiast"], [61, "Builder"], [75, "Builder"],
+    [0, "Curious"], [5, "Curious"], [6, "Enthusiast"], [15, "Enthusiast"], [16, "Explorer"], [30, "Explorer"],
+    [31, "Regular"], [45, "Regular"], [46, "Builder"], [60, "Builder"], [61, "Quantizer"], [75, "Quantizer"],
     [76, "Power User"], [90, "Power User"], [91, "Legend"], [99, "Legend"], [100, "God Mode"],
   ];
   for (const [score, rank] of expected) assert.equal(tierFor(score).rank, rank, `score ${score}`);
@@ -49,7 +49,7 @@ test("special roasts at the extremes", () => {
 test("ranks run from Curious to God Mode with levels 1 to 9", () => {
   assert.deepEqual(
     TIERS.map((t) => t.rank),
-    ["Curious", "Explorer", "Tinkerer", "Regular", "Enthusiast", "Builder", "Power User", "Legend", "God Mode"],
+    ["Curious", "Enthusiast", "Explorer", "Regular", "Builder", "Quantizer", "Power User", "Legend", "God Mode"],
   );
   assert.deepEqual(TIERS.map((t) => t.level), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
@@ -57,11 +57,11 @@ test("ranks run from Curious to God Mode with levels 1 to 9", () => {
 test("rank phrases use the right article", () => {
   assert.deepEqual(TIERS.map(youAre), [
     "You're Curious",
-    "You're an Explorer",
-    "You're a Tinkerer",
-    "You're a Regular",
     "You're an Enthusiast",
+    "You're an Explorer",
+    "You're a Regular",
     "You're a Builder",
+    "You're a Quantizer",
     "You're a Power User",
     "You're a Legend",
     "You've unlocked God Mode",
@@ -69,10 +69,10 @@ test("rank phrases use the right article", () => {
 });
 
 test("share text", () => {
-  assert.equal(shareText(66), "I'm a Builder on the Local AI Purity Test: 66/100.");
+  assert.equal(shareText(66), "I'm a Quantizer on the Local AI Purity Test: 66/100.");
   assert.equal(shareText(3), "I'm Curious on the Local AI Purity Test: 3/100.");
-  assert.equal(shareText(12), "I'm an Explorer on the Local AI Purity Test: 12/100.");
+  assert.equal(shareText(12), "I'm an Enthusiast on the Local AI Purity Test: 12/100.");
   assert.equal(shareText(100), "I've unlocked God Mode on the Local AI Purity Test: 100/100.");
   assert.equal(theyAre(tierFor(100)), "Your friend has unlocked God Mode");
-  assert.equal(theyAre(tierFor(66)), "Your friend is a Builder");
+  assert.equal(theyAre(tierFor(66)), "Your friend is a Quantizer");
 });

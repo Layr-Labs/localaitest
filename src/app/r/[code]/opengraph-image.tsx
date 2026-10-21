@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { OG_SIZE } from "@/lib/og";
 import { allCodes, parseCode, tierFor } from "@/lib/score";
 
-export const alt = "A Local AI Purity Test score card";
+export const alt = "A Local AI Purity Test rank card";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
