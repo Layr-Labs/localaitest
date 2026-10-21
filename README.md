@@ -51,6 +51,7 @@ Connect GitHub or Hugging Face and the test ticks the items it can prove from yo
 ### The jokes
 
 - A VRAM bar that fills as you tick items and overflows into "offloading to CPU… 0.4 tok/s"
+- A GPU fan and temperature ("Your GPU: 68°C") that climb with your answers
 - An "Ask an AI Assistant" button that runs out of CUDA memory
 - Jokes on 37 items, shown when you hover over or tick them, including a deliberately bad pelican on a bicycle
 - A hidden phrase: type `gguf when` anywhere on the page

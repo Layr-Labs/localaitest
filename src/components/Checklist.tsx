@@ -19,7 +19,7 @@ import { AutofillPanel } from "./AutofillPanel";
 import { Footer } from "./Footer";
 import { Joke } from "./Joke";
 import { ScoreLoading } from "./ScoreLoading";
-import { StatusBar } from "./StatusBar";
+import { GpuTemp, StatusBar } from "./StatusBar";
 
 const SECRET = "gguf when";
 const VRAM_ITEMS_TO_FILL = 40;
@@ -202,6 +202,9 @@ export function Checklist() {
                   className={`h-full transition-all duration-300 ${vramOverflow ? "bg-red-500" : "bg-accent"}`}
                   style={{ width: `${vramFill}%` }}
                 />
+              </div>
+              <div className="mt-2">
+                <GpuTemp checked={checkedCount} />
               </div>
             </div>
 
