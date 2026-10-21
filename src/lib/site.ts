@@ -3,6 +3,9 @@ export const SITE_DOMAIN = "localaitest.com";
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? `https://${SITE_DOMAIN}`).replace(/\/$/, "");
 export const SITE_DESCRIPTION = "The official purity test for people who run open-weight models. How quantized are you?";
 
+/** The business that runs the site, named in the footer as the FTC requires. */
+export const OPERATOR = "Eigen Labs, Inc.";
+
 /** Footer credits. */
 export const CREATOR = { name: "Pratik", url: "https://x.com/pratikg" };
 export const INSPIRED_BY = {

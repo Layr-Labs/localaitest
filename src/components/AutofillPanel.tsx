@@ -257,7 +257,7 @@ export function AutofillPanel({ rig, connected, onDetected, onRigChange, onConne
           <rect x="4" y="11" width="16" height="10" rx="2" />
           <path d="M8 11V7a4 4 0 0 1 8 0v4" />
         </svg>
-        We only read your public profile and store nothing. Your answers stay in your browser.
+        We only read your public profile and don&apos;t keep anything ourselves. Your answers stay in your browser.
       </p>
 
       <div className="mt-4 space-y-3 border-t border-white/10 light:border-black/10 pt-4 text-sm">

@@ -59,12 +59,15 @@ Connect GitHub or Hugging Face and the test ticks the items it can prove from yo
 
 ## Privacy
 
+The site is run by Eigen Labs, Inc. The footer's privacy note is the user-facing version of this section; keep the two in sync.
+
 - Your answers never leave your browser. They're saved on your device only (localStorage) and Reset deletes them.
-- Autofill is optional and reads only your public profile.
-  - Hugging Face login runs entirely in the browser, with PKCE.
-  - GitHub login asks for no permissions. One server route swaps the login code for a token and hands it to the browser in the URL fragment. Nothing is stored or logged and the token is revoked as soon as autofill finishes.
+- No accounts, no analytics and no tracking. The site's own code doesn't keep or log anything.
+- The hosting provider (Vercel) receives standard request data, like IP addresses, to serve the page.
+- Autofill is optional. The browser reads your public profile straight from GitHub's and Hugging Face's APIs.
+  - Hugging Face login runs entirely in the browser, with PKCE. Its token can only read your basic profile and isn't cancelled afterward.
+  - GitHub login asks for no permissions, so its token can only read public data. One server route swaps the login code for a token and hands it to the browser in the URL fragment, without storing or logging it. The browser asks GitHub to cancel the token when autofill finishes; if the page closes first, it isn't cancelled.
 - Share links carry only your score and rig badge.
-- No accounts, no analytics and no tracking.
 
 ## Stack
 
