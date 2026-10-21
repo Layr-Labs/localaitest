@@ -32,8 +32,7 @@ export function Footer({ fullWidth = false }: { fullWidth?: boolean }) {
           Inspired by the work of{" "}
           <ExternalLink href={INSPIRED_BY.people[0].url}>{INSPIRED_BY.people[0].name}</ExternalLink> and{" "}
           <ExternalLink href={INSPIRED_BY.people[1].url}>{INSPIRED_BY.people[1].name}</ExternalLink> on{" "}
-          <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink> and the original{" "}
-          <ExternalLink href={INSPIRED_BY.original.url}>{INSPIRED_BY.original.name}</ExternalLink>.
+          <ExternalLink href={INSPIRED_BY.site.url}>{INSPIRED_BY.site.name}</ExternalLink>.
         </p>
 
         <p className="mt-6 text-xs text-white/40 light:text-black/40">© 2026 {OPERATOR}</p>

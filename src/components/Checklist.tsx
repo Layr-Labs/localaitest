@@ -184,7 +184,7 @@ export function Checklist() {
           {/* Left rail: desktop / tablet only */}
           <aside className="hidden md:flex md:flex-col md:sticky md:top-0 md:h-screen md:overflow-y-auto md:pt-10 md:pb-6">
             <h1 className="text-4xl lg:text-5xl xl:text-6xl font-headline font-bold tracking-tight text-accent text-balance leading-tight">
-              The Local AI <span className="text-white light:text-black">Purity Test</span>
+              The Local AI <span className="block text-white light:text-black">Test</span>
             </h1>
 
             {/* VRAM readout */}
@@ -209,7 +209,7 @@ export function Checklist() {
             </div>
 
             <p className="mt-6 text-sm text-white/70 light:text-black/70">
-              The official purity test for people who run open-weight models. Tick everything you&apos;ve done.
+              The official test for people who run open-weight models. Tick everything you&apos;ve done.
             </p>
             <p className="mt-2 text-sm font-semibold text-white light:text-black">
               Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
@@ -232,10 +232,10 @@ export function Checklist() {
             {/* Mobile header */}
             <div className="md:hidden">
               <h1 className="text-4xl font-headline font-bold tracking-tight text-accent sm:text-5xl text-balance">
-                The Local AI <span className="text-white light:text-black">Purity Test</span>
+                The Local AI <span className="block text-white light:text-black">Test</span>
               </h1>
               <p className="mt-3 text-sm text-white/70 light:text-black/70">
-                The official purity test for people who run open-weight models. Tick everything you&apos;ve done.
+                The official test for people who run open-weight models. Tick everything you&apos;ve done.
               </p>
               <p className="mt-2 text-sm font-semibold text-white light:text-black">
                 Caution: This is not a bucket list. Your electricity bill can&apos;t take it.

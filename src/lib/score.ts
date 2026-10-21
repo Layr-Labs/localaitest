@@ -104,5 +104,5 @@ export function allCodes(): string[] {
 
 export function shareText(score: number): string {
   const tier = tierFor(score);
-  return `${iAm(tier)} on the Local AI Purity Test: ${score}/100.`;
+  return `${iAm(tier)} on the Local AI Test: ${score}/100.`;
 }

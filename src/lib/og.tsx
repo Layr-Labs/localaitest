@@ -81,7 +81,7 @@ export function HomeCard() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", marginLeft: 84 }}>
-        <span style={{ fontSize: 30, lineHeight: 1.2 }}>The Local AI Purity Test</span>
+        <span style={{ fontSize: 30, lineHeight: 1.2 }}>The Local AI Test</span>
         <span style={{ marginTop: 14, fontSize: 96, lineHeight: 1, letterSpacing: -3 }}>How local</span>
         <span style={{ fontSize: 96, lineHeight: 1, letterSpacing: -3 }}>are you?</span>
       </div>

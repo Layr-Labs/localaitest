@@ -1,12 +1,12 @@
 <img src="docs/local-ai-test-logo.png" alt="Local AI Test logo" width="96" height="96" />
 
-# The Local AI Purity Test
+# The Local AI Test
 
-A purity test for people who run open-weight models. Tick everything you've done and your score earns you a rank from Curious to Legend.
+A test for people who run open-weight models. Tick everything you've done and your score earns you a rank from Curious to Legend.
 
 **Take it at [localaitest.com](https://localaitest.com)**
 
-![The Local AI Purity Test: How local are you?](docs/home-card.png)
+![The Local AI Test: How local are you?](docs/home-card.png)
 
 ## How it works
 
@@ -119,13 +119,13 @@ Made by [Pratik](https://x.com/pratikg). Design and rank cards by Estella Xian.
 
 Questions and ideas from [Ivan Fioravanti](https://x.com/ivanfioravanti), [Kydo](https://x.com/0xkydo), [@Spangler3000](https://x.com/Spangler3000) and [David Tai](https://x.com/TheDavidTai).
 
-Inspired by the work of [Tyler](https://x.com/tyler_fong_) and [Sarah](https://x.com/MilksandMatcha) on [sfpurity.com](https://sfpurity.com) and the original [Rice Purity Test](https://en.wikipedia.org/wiki/Rice_Purity_Test).
+Inspired by the work of [Tyler](https://x.com/tyler_fong_) and [Sarah](https://x.com/MilksandMatcha) on [sfpurity.com](https://sfpurity.com).
 
 ## License
 
 The code is released under the [MIT License](LICENSE).
 
-The "Local AI Purity Test" name, the localaitest.com domain, the logo and the rank card artwork in `public/cards` are not covered by the license. If you fork this, please give it your own name and look.
+The "Local AI Test" name, the localaitest.com domain, the logo and the rank card artwork in `public/cards` are not covered by the license. If you fork this, please give it your own name and look.
 
 The fonts are licensed separately:
 
