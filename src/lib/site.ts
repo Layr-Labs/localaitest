@@ -6,6 +6,9 @@ export const SITE_DESCRIPTION = "The official test for people who run open-weigh
 /** The business that runs the site, named in the footer as the FTC requires. */
 export const OPERATOR = "Eigen Labs, Inc.";
 
+/** The public source code, linked from the footer. */
+export const REPO_URL = "https://github.com/Layr-Labs/localaitest";
+
 /** Footer credits. */
 export const CREATOR = { name: "Pratik", url: "https://x.com/pratikg" };
 export const INSPIRED_BY = {
