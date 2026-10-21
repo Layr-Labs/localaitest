@@ -209,7 +209,7 @@ export function Checklist() {
             </div>
 
             <p className="mt-6 text-sm text-white/70 light:text-black/70">
-              The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
+              The official purity test for people who run open-weight models. Tick everything you&apos;ve done.
             </p>
             <p className="mt-2 text-sm font-semibold text-white light:text-black">
               Caution: This is not a bucket list. Your electricity bill can&apos;t take it.
@@ -235,7 +235,7 @@ export function Checklist() {
                 The Local AI <span className="text-white light:text-black">Purity Test</span>
               </h1>
               <p className="mt-3 text-sm text-white/70 light:text-black/70">
-                The official purity test for people who run open-weight models at home. Tick everything you&apos;ve done.
+                The official purity test for people who run open-weight models. Tick everything you&apos;ve done.
               </p>
               <p className="mt-2 text-sm font-semibold text-white light:text-black">
                 Caution: This is not a bucket list. Your electricity bill can&apos;t take it.

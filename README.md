@@ -2,7 +2,7 @@
 
 # The Local AI Purity Test
 
-A purity test for people who run open-weight models at home. Tick everything you've done and your score earns you a rank from Curious to Legend.
+A purity test for people who run open-weight models. Tick everything you've done and your score earns you a rank from Curious to Legend.
 
 **Take it at [localaitest.com](https://localaitest.com)**
 
