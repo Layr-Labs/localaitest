@@ -74,6 +74,8 @@ export function ResultView({ code, score, rig }: Props) {
   const [touch, setTouch] = useState(false);
 
   useEffect(() => {
+    // Both read the browser, so they have to wait until after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMine(loadLastResult() === code);
     setTouch(window.matchMedia("(pointer: coarse)").matches);
   }, [code]);
@@ -170,7 +172,6 @@ export function ResultView({ code, score, rig }: Props) {
       <p className="mt-3 text-sm font-semibold text-white/70 light:text-black/70">{youAre(tier)}</p>
 
       {/* Tier video */}
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video
         src={videoSrc}
         autoPlay

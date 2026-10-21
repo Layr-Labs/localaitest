@@ -33,16 +33,6 @@ html.light dialog::backdrop {
   background: rgb(0 0 0 / 0.35);
 }
 
-/* Fan in the status bar. Speed is set inline from how many items are checked. */
-@keyframes fan-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.fan {
-  animation: fan-spin linear infinite;
-}
-
 /* Types text out one character at a time; width is set inline in ch units. */
 @keyframes type-out {
   from {
@@ -96,7 +86,6 @@ html.light dialog::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fan,
   .type-slow,
   .cursor::after,
   .toast,

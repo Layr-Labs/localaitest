@@ -27,6 +27,8 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
+    // Reading the saved theme has to wait until after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (stored === "light") setTheme("light");
   }, []);
 

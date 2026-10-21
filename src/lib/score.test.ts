@@ -4,11 +4,11 @@ import { allCodes, formatCode, parseCode, rigClassFor, roastFor, shareText, they
 
 test("tier boundaries", () => {
   const expected: [number, string][] = [
-    [0, "FP32"], [5, "FP32"], [6, "FP16"], [15, "FP16"], [16, "Q8_0"], [30, "Q8_0"],
-    [31, "Q6_K"], [45, "Q6_K"], [46, "Q5_K_M"], [60, "Q5_K_M"], [61, "Q4_K_M"], [75, "Q4_K_M"],
-    [76, "Q2_K"], [90, "Q2_K"], [91, "IQ1_S"], [99, "IQ1_S"], [100, "0-bit"],
+    [0, "Curious"], [5, "Curious"], [6, "Explorer"], [15, "Explorer"], [16, "Tinkerer"], [30, "Tinkerer"],
+    [31, "Regular"], [45, "Regular"], [46, "Enthusiast"], [60, "Enthusiast"], [61, "Builder"], [75, "Builder"],
+    [76, "Power User"], [90, "Power User"], [91, "Legend"], [99, "Legend"], [100, "God Mode"],
   ];
-  for (const [score, tier] of expected) assert.equal(tierFor(score).name, tier, `score ${score}`);
+  for (const [score, rank] of expected) assert.equal(tierFor(score).rank, rank, `score ${score}`);
   assert.throws(() => tierFor(101));
   assert.throws(() => tierFor(-1));
 });

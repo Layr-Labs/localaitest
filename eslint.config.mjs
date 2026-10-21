@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The local launch-video workspace, which isn't part of the site.
+    "video/**",
   ]),
 ]);
 
